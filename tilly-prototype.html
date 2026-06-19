@@ -174,6 +174,33 @@
   .ai-opt-h{font-weight:800;font-size:13.5px;margin-bottom:5px}
   .ai-go{width:100%;border:0;background:var(--accent);color:#fff;font-family:inherit;font-weight:700;padding:11px;border-radius:11px;cursor:pointer;margin-top:4px}
   .ai-opt .ai-model-row{margin-bottom:0;margin-top:4px}
+  /* persona / customisation */
+  .avatar{border:0;cursor:pointer;font-family:var(--font);padding:0}
+  .avatar.small{width:30px;height:30px;font-size:14px}
+  .cust{position:absolute;inset:0;z-index:32;background:rgba(12,31,23,.45);backdrop-filter:blur(2px);display:none;align-items:flex-end;justify-content:center}
+  .cust.open{display:flex}
+  .cust-card{background:#fff;border-radius:24px 24px 0 0;padding:18px 18px 22px;width:100%;max-height:92%;overflow-y:auto;scrollbar-width:none}
+  .cust-card::-webkit-scrollbar{width:0}
+  .cust-card h3{font-size:17px;font-weight:800;margin-bottom:6px}
+  .cust-card .sub{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+  .cust-lbl{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:16px 0 8px}
+  .cust-input{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-family:inherit;font-size:14.5px;outline:none}
+  .cust-input:focus{border-color:var(--accent)}
+  .av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .av-opt{border:1px solid var(--line);background:#fff;border-radius:14px;padding:8px;cursor:pointer;display:flex;justify-content:center}
+  .av-opt.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-tint)}
+  .av-c{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px}
+  .acc-row{display:flex;gap:10px;flex-wrap:wrap}
+  .acc-sw{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+  .acc-sw.on{box-shadow:0 0 0 2px var(--ink)}
+  .style-list{display:flex;flex-direction:column;gap:8px}
+  .style-opt{display:flex;align-items:center;gap:11px;border:1px solid var(--line);background:#fff;border-radius:13px;padding:11px;cursor:pointer;font-family:inherit;text-align:left;width:100%}
+  .style-opt.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-tint)}
+  .style-opt .se{font-size:22px;flex:none}
+  .style-opt b{font-size:14px;display:block}
+  .style-opt small{font-size:12px;color:var(--muted)}
+  .cust-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:14px;font-weight:600}
+  .cust-try{width:100%;border:0;background:var(--accent-tint);color:var(--accent-deep);font-family:inherit;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;margin-top:8px}
   /* demo switch */
   .demo-switch{display:flex;align-items:center;gap:9px;margin-bottom:14px}
   .demo-lbl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);flex:none}
@@ -340,10 +367,10 @@
 <div class="phone">
   <header>
     <div class="top-row">
-      <div class="avatar">T</div>
-      <div class="who">
-        <div class="name">Tilly</div>
-        <div class="status"><span class="dot"></span> Watching your back · synced just now</div>
+      <button class="avatar" id="hdrAvatar" onclick="openCust()" title="Customise your coach">T</button>
+      <div class="who" onclick="openCust()" style="cursor:pointer">
+        <div class="name" id="hdrName">Tilly</div>
+        <div class="status"><span class="dot"></span> tap to customise · synced just now</div>
       </div>
       <button class="sts-pill" onclick="openSheet()">
         <span class="lbl">Safe to spend</span>
@@ -401,6 +428,9 @@
       <button class="ai-close" onclick="toggleAIHelp()">Close</button>
     </div>
   </div>
+
+  <!-- customisation panel -->
+  <div class="cust" id="custPanel" onclick="if(event.target===this)closeCust()"><div class="cust-card" id="custBody"></div></div>
 
   <!-- onboarding -->
   <div class="onb" id="onb">
@@ -863,7 +893,7 @@ function addTilly(parts,nudge){ const e=document.createElement('div'); e.classNa
   let inner=''; let fu=null;
   parts.forEach(p=>{ if(p.type==='card')inner+=p.html; else if(p.type==='followups')fu=p.items;
     else inner+=`<div class="bubble">${nudge?'<div class="tag">⚡ Heads up</div>':''}${p.html}</div>`; });
-  inner+=`<div class="meta">Tilly · ${now()}</div>`;
+  inner+=`<div class="meta">${PERSONA.name} · ${now()}</div>`;
   if(fu) inner+=`<div class="followups">${fu.map(f=>`<button class="fu" onclick="handleSend('${f.replace(/'/g,"\\'")}')">${f}</button>`).join('')}</div>`;
   e.innerHTML=inner; chat.appendChild(e); cdown(); }
 function showTyping(){ const e=document.createElement('div'); e.className='msg tilly typing'; e.id='typing';
@@ -875,7 +905,7 @@ let convo=[];
 function handleSend(text){ text=(text||input.value).trim(); if(!text)return;
   if(document.querySelector('nav button.on').dataset.scr!=='chat') go('chat');
   addUser(text); input.value=''; sendBtn.disabled=true;
-  if(AI.available) aiRespond(text); else respond(smartRoute(text)); }
+  if(AI.available) aiRespond(text); else respond(styleize(smartRoute(text))); }
 
 /* =====================================================================
    FREE LOCAL AI via Ollama (optional). Falls back to built-in coach.
@@ -901,7 +931,14 @@ const AI={
     }catch(e){}
     return false;
   },
-  system(){ return `You are Tilly, an Irish money coach inside a chat app. Voice: warm, casual, a little cheeky, never preachy, never shaming. Keep replies short (1-3 sentences). Plain text only, no markdown, no bullet lists. All money is euro.
+  styleVoice(){
+    const st=(typeof STYLES!=='undefined'?STYLES.find(s=>s.id===PERSONA.style):null)||{voice:'Warm, casual, a little cheeky, never preachy, never shaming.'};
+    let v=`Your name is ${PERSONA.name}. Voice: ${st.voice}`;
+    if(PERSONA.catch) v+=` End most replies with your catchphrase: "${PERSONA.catch}".`;
+    v+=' Keep replies short (1-3 sentences). Plain text only, no markdown, no bullet lists. All money is euro.';
+    return v;
+  },
+  system(){ return `You are a personal money coach inside a chat app. ${this.styleVoice()}
 HARD RULE: only state numbers that appear in the FACTS below. Never calculate or invent a figure. If a number you need isn't in FACTS, say you'll check rather than guess.`; },
   facts(msg){
     const e=Engine, p=e.projection(), v=e.velocity();
@@ -929,7 +966,7 @@ HARD RULE: only state numbers that appear in the FACTS below. Never calculate or
   async chat(history,msg,onToken){
     if(this.mode==='hosted'){
       const rr=await fetch(this.hostedPath,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({messages:[...history,{role:'user',content:msg}], facts:this.facts(msg)})});
+        body:JSON.stringify({messages:[...history,{role:'user',content:msg}], facts:this.facts(msg), voice:this.styleVoice()})});
       if(!rr.ok) throw new Error('api '+rr.status);
       const d=await rr.json(); const text=(d.text||'').trim();
       if(!text) throw new Error('empty');
@@ -962,7 +999,7 @@ function aiUseHosted(){
   document.getElementById('aiHelp').classList.remove('open');
   addTilly([{type:'text',html:`Hooked up to <b>Claude Haiku</b> through your API. I'll phrase replies myself now, numbers still come straight from your accounts. (This needs the app running on your deployment; opening the file directly won't reach <code>/api/chat</code>.)`}]); }
 function startStreamBubble(){ const e=document.createElement('div'); e.className='msg tilly';
-  e.innerHTML=`<div class="bubble"></div><div class="meta">Tilly · ${now()}</div>`; chat.appendChild(e); cdown(); return e; }
+  e.innerHTML=`<div class="bubble"></div><div class="meta">${PERSONA.name} · ${now()}</div>`; chat.appendChild(e); cdown(); return e; }
 async function aiRespond(text){
   showTyping(); let bubble=null, acc='';
   try{
@@ -975,9 +1012,9 @@ async function aiRespond(text){
     const wasHosted=AI.mode==='hosted';
     AI.available=false; AI.mode='off'; updateAIBar();
     if(wasHosted) addTilly([{type:'text',html:`Couldn't reach the Claude API just now. Make sure <code>ANTHROPIC_API_KEY</code> is set in Vercel and you're on the deployed URL, not the local file. Using the built-in coach for now.`}]);
-    addTilly(smartRoute(text)); return;
+    addTilly(styleize(smartRoute(text))); return;
   }
-  if(!bubble||!acc.trim()){ hideTyping(); if(bubble)bubble.remove(); addTilly(smartRoute(text)); return; }
+  if(!bubble||!acc.trim()){ hideTyping(); if(bubble)bubble.remove(); addTilly(styleize(smartRoute(text))); return; }
   convo.push({role:'user',content:text},{role:'assistant',content:acc.trim()});
 }
 
@@ -1334,7 +1371,51 @@ function smartRoute(raw){
   return route(m);
 }
 
+/* =====================================================================
+   PERSONA — avatar, name, colour. (Talking-style voices are on hold.)
+   ===================================================================== */
+const AVATARS=[
+  {id:'tilly',emoji:'T'},{id:'surf',emoji:'🏄'},{id:'cap',emoji:'🧢'},{id:'bestie',emoji:'💁‍♀️'},
+  {id:'shaka',emoji:'🤙'},{id:'cool',emoji:'😎'},{id:'shark',emoji:'🦈'},{id:'clover',emoji:'🍀'},
+  {id:'fox',emoji:'🦊'},{id:'star',emoji:'⭐'},{id:'rocket',emoji:'🚀'},{id:'piggy',emoji:'🐷'},
+];
+const ACCENTS=['#0e6b48','#7b2ff7','#2d6cdf','#e0524d','#e0962a','#d4317c','#0a1f44','#1f9e8a'];
+let PERSONA={name:'Tilly',avatar:'tilly',accent:'#0e6b48',small:false};
+
+function styleize(parts){ return parts; }   // talking-style voices on hold; passthrough for now
+
+function lighten(hex,amt){ const n=parseInt(hex.slice(1),16); const r=Math.min(255,(n>>16)+amt),g=Math.min(255,((n>>8)&255)+amt),b=Math.min(255,(n&255)+amt); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+function avGrad(c){ return `linear-gradient(145deg, ${lighten(c,45)}, ${c})`; }
+function avEmoji(id){ return (AVATARS.find(a=>a.id===id)||AVATARS[0]).emoji; }
+function savePersona(){ try{ localStorage.setItem('tilly_persona',JSON.stringify(PERSONA)); }catch(e){} }
+function loadPersona(){ try{ const s=localStorage.getItem('tilly_persona'); if(s) PERSONA=Object.assign(PERSONA,JSON.parse(s)); }catch(e){} }
+function applyPersona(){
+  const el=document.getElementById('hdrAvatar'); if(!el)return;
+  el.style.background=avGrad(PERSONA.accent); el.textContent=avEmoji(PERSONA.avatar);
+  el.classList.toggle('small',!!PERSONA.small);
+  document.getElementById('hdrName').textContent=PERSONA.name||'Tilly';
+  savePersona();
+}
+function setAvatar(id){ PERSONA.avatar=id; applyPersona(); renderCust(); }
+function setAccent(c){ PERSONA.accent=c; applyPersona(); renderCust(); }
+function openCust(){ renderCust(); document.getElementById('custPanel').classList.add('open'); }
+function closeCust(){ document.getElementById('custPanel').classList.remove('open'); }
+function renderCust(){
+  document.getElementById('custBody').innerHTML=`
+    <h3>Customise your coach</h3>
+    <div class="sub">Make it yours. Different talking styles are coming soon.</div>
+    <label class="cust-lbl">Name</label>
+    <input id="custName" class="cust-input" value="${esc(PERSONA.name)}" oninput="PERSONA.name=this.value;applyPersona()" />
+    <label class="cust-lbl">Avatar</label>
+    <div class="av-grid">${AVATARS.map(a=>`<button class="av-opt ${PERSONA.avatar===a.id?'on':''}" onclick="setAvatar('${a.id}')"><span class="av-c" style="background:${avGrad(PERSONA.accent)}">${a.emoji}</span></button>`).join('')}</div>
+    <label class="cust-lbl">Colour</label>
+    <div class="acc-row">${ACCENTS.map(c=>`<button class="acc-sw ${PERSONA.accent===c?'on':''}" style="background:${c}" onclick="setAccent('${c}')"></button>`).join('')}</div>
+    <label class="cust-toggle"><span>Small avatar</span><button class="toggle ${PERSONA.small?'on':''}" onclick="PERSONA.small=!PERSONA.small;applyPersona();renderCust()"></button></label>
+    <button class="ai-close" onclick="closeCust()">Done</button>`;
+}
+
 function boot(){
+  loadPersona(); applyPersona();
   document.getElementById('stsPillVal').textContent=fmt(Engine.safeToSpend());
   document.getElementById('onbSts').textContent=fmt(Engine.safeToSpend())+' safe to spend';
   document.getElementById('onbCoffee').textContent=Engine.nightsOut(4)+' nights out last month, '+fmt(Engine.goingOut(4))+' going out';

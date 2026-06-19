@@ -14,10 +14,10 @@ const client = new Anthropic(); // reads ANTHROPIC_API_KEY automatically
 
 const MODEL = "claude-haiku-4-5-20251001";
 
-const VOICE = `You are Tilly, an Irish money coach inside a chat app.
+const DEFAULT_VOICE = `You are a personal money coach inside a chat app.
 Voice: warm, casual, a little cheeky, never preachy, never shaming. Talk like a money-smart friend.
-Keep replies short, 1 to 3 sentences. Plain text only: no markdown, no bullet lists, no headings. All money is in euro.
-HARD RULE: only state numbers that appear in the FACTS block below. Never calculate, estimate, or invent a figure. If a number you need is not in FACTS, say you will check it rather than guessing.`;
+Keep replies short, 1 to 3 sentences. Plain text only: no markdown, no bullet lists, no headings. All money is in euro.`;
+const HARD_RULE = `HARD RULE: only state numbers that appear in the FACTS block below. Never calculate, estimate, or invent a figure. If a number you need is not in FACTS, say you will check it rather than guessing.`;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     return;
   }
   try {
-    const { messages = [], facts = "" } = req.body || {};
+    const { messages = [], facts = "", voice = "" } = req.body || {};
 
     // Basic guards
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -33,10 +33,12 @@ export default async function handler(req, res) {
       return;
     }
 
+    const persona = voice && voice.length < 800 ? voice : DEFAULT_VOICE;
+
     const response = await client.messages.create({
       model: MODEL,
       max_tokens: 400,                       // caps cost per reply
-      system: `${VOICE}\n\nFACTS:\n${facts}`,
+      system: `${persona}\n${HARD_RULE}\n\nFACTS:\n${facts}`,
       messages: messages.slice(-8),          // short context window, cheap
     });
 
