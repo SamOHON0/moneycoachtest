@@ -201,28 +201,22 @@
   .style-opt small{font-size:12px;color:var(--muted)}
   .cust-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:14px;font-weight:600}
   .cust-try{width:100%;border:0;background:var(--accent-tint);color:var(--accent-deep);font-family:inherit;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;margin-top:8px}
-  /* mascot — corner character */
-  .mascot{position:absolute;right:12px;bottom:78px;width:90px;height:104px;z-index:9;cursor:pointer;display:none}
-  .mascot.show{display:block;animation:mascotIn .45s cubic-bezier(.2,.9,.3,1.3)}
-  .mascot-bob{position:absolute;bottom:0;right:0;width:90px;height:90px;animation:bob 3.2s ease-in-out infinite}
-  .mascot-char{width:90px;height:90px;overflow:visible;display:block}
-  .mascot-char.pop{animation:mpop .5s ease}
-  .m-shadow{fill:rgba(12,31,23,.16)}
-  .m-sprout{fill:#3fae7a}
-  .m-fill{fill:#0e6b48}
-  .m-arm{stroke:#0e6b48;stroke-width:4;fill:none;stroke-linecap:round}
-  .m-cheek{fill:#ff9bb0;opacity:0;transition:opacity .2s}
-  .mascot.celebrate .m-cheek{opacity:.85}
-  .eyes{transform-box:fill-box;transform-origin:center;transition:transform .09s}
-  .eyes.blink{transform:scaleY(.12)}
-  .mascot-bubble{position:absolute;right:8px;bottom:98px;max-width:188px;background:#fff;border:1px solid var(--line);
-    border-radius:14px;border-bottom-right-radius:4px;padding:9px 12px;font-size:12.5px;font-weight:600;color:var(--ink);
-    box-shadow:var(--shadow);opacity:0;transform:translateY(8px) scale(.92);transform-origin:bottom right;pointer-events:none;transition:.25s;line-height:1.4}
-  .mascot-bubble.show{opacity:1;transform:none}
-  .mascot-bubble .num{color:var(--accent-deep);font-weight:800}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-  @keyframes mpop{0%{transform:scale(1)}28%{transform:scale(1.13) rotate(-5deg)}60%{transform:scale(.96) rotate(3deg)}100%{transform:scale(1)}}
-  @keyframes mascotIn{from{opacity:0;transform:translateY(22px) scale(.7)}to{opacity:1;transform:none}}
+  /* character (person) — the face of the app */
+  .avatar{overflow:hidden}
+  .avatar svg{width:100%;height:100%;display:block}
+  .person-full{display:block;overflow:visible}
+  .hero-row{display:flex;align-items:flex-end;gap:6px}
+  .hero-left{flex:1;min-width:0}
+  .hero-char{width:96px;flex:none;align-self:flex-end;margin:0 -8px -22px 0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
+  .hero-char svg{width:96px;display:block}
+  .hero-say{margin-top:9px;display:inline-block;background:rgba(255,255,255,.18);border-radius:13px;border-bottom-left-radius:4px;padding:6px 11px;font-size:12.5px;font-weight:700;line-height:1.35}
+  .hero-say .num{color:#fff;font-weight:800}
+  .msg.tilly{flex-direction:row;align-items:flex-end;gap:8px}
+  .msg-av{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;background:#eef0ec;align-self:flex-end}
+  .msg-av svg{width:30px;height:30px;display:block}
+  .msg-col{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:100%}
+  .cust-preview{display:flex;justify-content:center;background:var(--bg);border-radius:16px;padding:8px;margin-bottom:4px}
+  .cust-preview svg{width:130px}
   /* demo switch */
   .demo-switch{display:flex;align-items:center;gap:9px;margin-bottom:14px}
   .demo-lbl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);flex:none}
@@ -410,27 +404,6 @@
     <section class="screen" id="scr-insights"></section>
     <section class="screen" id="scr-goals"></section>
     <section class="screen" id="scr-activity"></section>
-  </div>
-
-  <div class="mascot" id="mascot" onclick="Mascot.tap()" role="button" aria-label="Your coach">
-    <div class="mascot-bubble" id="mascotBubble"></div>
-    <div class="mascot-bob"><svg class="mascot-char" id="mascotChar" viewBox="0 0 100 100">
-      <ellipse class="m-shadow" cx="50" cy="93" rx="22" ry="5"/>
-      <path class="m-sprout" d="M50,17 C50,8 57,4 63,6 C61,13 55,16 50,17 Z"/>
-      <rect class="m-fill" x="22" y="20" width="56" height="62" rx="26"/>
-      <ellipse cx="50" cy="52" rx="19" ry="23" fill="rgba(255,255,255,.10)"/>
-      <path class="m-arm m-armL" d="M23,60 q-9,1 -11,9"/>
-      <path class="m-arm m-armR" d="M77,60 q9,1 11,9"/>
-      <g class="eyes" id="mEyes">
-        <circle cx="40" cy="47" r="7.5" fill="#fff"/><circle cx="60" cy="47" r="7.5" fill="#fff"/>
-        <circle cx="41.5" cy="48" r="3.3" fill="#0c1f17"/><circle cx="61.5" cy="48" r="3.3" fill="#0c1f17"/>
-      </g>
-      <g id="brows" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
-        <path id="browL" d="M34,38 L46,38"/><path id="browR" d="M54,38 L66,38"/>
-      </g>
-      <circle class="m-cheek" cx="31" cy="60" r="4"/><circle class="m-cheek" cx="69" cy="60" r="4"/>
-      <path id="mMouth" d="M38,60 Q50,72 62,60" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
-    </svg></div>
   </div>
 
   <div class="composer" id="composer">
@@ -702,9 +675,15 @@ function renderHome(){
     <div class="greet">Morning, Sam 👋<small>Here's where you stand today, Thursday ${ord(18)} June.</small></div>
 
     <button class="sts-hero" onclick="openSheet()">
-      <div class="top"><span class="cap">Safe to spend</span><span class="chev">Breakdown ›</span></div>
-      <div class="big">${fmt(sts)}</div>
-      <div class="sub">before payday · ${Engine.daysToPayday()} days · dips to ${fmt(dip.bal)} on the ${ord(dip.day)}</div>
+      <div class="hero-row">
+        <div class="hero-left">
+          <div class="top"><span class="cap">Safe to spend</span></div>
+          <div class="big">${fmt(sts)}</div>
+          <div class="sub">before payday · ${Engine.daysToPayday()} days · dips to ${fmt(dip.bal)} on the ${ord(dip.day)}</div>
+          <div class="hero-say" id="heroSay">${buddyLine(sts)}</div>
+        </div>
+        <div class="hero-char">${personSVG(false)}</div>
+      </div>
       <div class="spark">${sparkSVG(proj)}</div>
     </button>
 
@@ -944,7 +923,7 @@ function addTilly(parts,nudge){ const e=document.createElement('div'); e.classNa
     else inner+=`<div class="bubble">${nudge?'<div class="tag">⚡ Heads up</div>':''}${p.html}</div>`; });
   inner+=`<div class="meta">${PERSONA.name} · ${now()}</div>`;
   if(fu) inner+=`<div class="followups">${fu.map(f=>`<button class="fu" onclick="handleSend('${f.replace(/'/g,"\\'")}')">${f}</button>`).join('')}</div>`;
-  e.innerHTML=inner; chat.appendChild(e); cdown(); }
+  e.innerHTML=`<div class="msg-av">${personSVG(true)}</div><div class="msg-col">${inner}</div>`; chat.appendChild(e); cdown(); }
 function showTyping(){ const e=document.createElement('div'); e.className='msg tilly typing'; e.id='typing';
   e.innerHTML='<div class="bubble"><span></span><span></span><span></span></div>'; chat.appendChild(e); cdown(); }
 function hideTyping(){ const t=document.getElementById('typing'); if(t)t.remove(); }
@@ -1048,7 +1027,7 @@ function aiUseHosted(){
   document.getElementById('aiHelp').classList.remove('open');
   addTilly([{type:'text',html:`Hooked up to <b>Claude Haiku</b> through your API. I'll phrase replies myself now, numbers still come straight from your accounts. (This needs the app running on your deployment; opening the file directly won't reach <code>/api/chat</code>.)`}]); }
 function startStreamBubble(){ const e=document.createElement('div'); e.className='msg tilly';
-  e.innerHTML=`<div class="bubble"></div><div class="meta">${PERSONA.name} · ${now()}</div>`; chat.appendChild(e); cdown(); return e; }
+  e.innerHTML=`<div class="msg-av">${personSVG(true)}</div><div class="msg-col"><div class="bubble"></div><div class="meta">${PERSONA.name} · ${now()}</div></div>`; chat.appendChild(e); cdown(); return e; }
 async function aiRespond(text){
   showTyping(); let bubble=null, acc='';
   try{
@@ -1426,92 +1405,128 @@ function smartRoute(raw){
 }
 
 /* =====================================================================
-   PERSONA — avatar, name, colour. (Talking-style voices are on hold.)
+   PERSONA — a real person character + selectable personalities.
+   The character is the face of the app: he lives in the Safe-to-Spend
+   card and in chat, and his talking style changes the voice.
    ===================================================================== */
-const AVATARS=[
-  {id:'tilly',emoji:'T'},{id:'surf',emoji:'🏄'},{id:'cap',emoji:'🧢'},{id:'bestie',emoji:'💁‍♀️'},
-  {id:'shaka',emoji:'🤙'},{id:'cool',emoji:'😎'},{id:'shark',emoji:'🦈'},{id:'clover',emoji:'🍀'},
-  {id:'fox',emoji:'🦊'},{id:'star',emoji:'⭐'},{id:'rocket',emoji:'🚀'},{id:'piggy',emoji:'🐷'},
+const ACCENTS=['#0e6b48','#7b2ff7','#2d6cdf','#e0524d','#e0962a','#d4317c','#0a1f44','#111827'];
+const SKINS=['#f3d0b0','#e8b98f','#c68a5e','#8d5a36','#5e3a24'];
+const STYLES=[
+  {id:'chill',label:'Chill (default)',emoji:'😎',desc:'Relaxed casual guy',
+   voice:'Relaxed, friendly, casual. Easy-going. Honest but never preachy, never shaming.',
+   open:[''],end:'',swaps:[],prop:'none',hair:'short',shades:true,fem:false},
+  {id:'surfer',label:'Surfer',emoji:'🏄',desc:'Stoked, dude',
+   voice:'A laid-back surfer. Uses "dude", "stoked", "gnarly", "no worries", "totally". Super chill, still gives the real numbers.',
+   open:['Dude, ','Yo, ','Alright so '],end:' Stay stoked 🤙',swaps:[[/\bHonestly\b/g,'Real talk']],prop:'headband',hair:'short',shades:true,fem:false},
+  {id:'frat',label:'Frat guy',emoji:'🧢',desc:'Hyped, bro',
+   voice:'A hyped American frat bro. Uses "bro", "dude", "LET\'S GO", "send it". High energy, never wrong on the numbers.',
+   open:['Bro, ','Ayy bro, ','Okay listen bro, '],end:" LET'S GO 🙌",swaps:[],prop:'cap',hair:'short',shades:false,fem:false},
+  {id:'bestie',label:'Bestie',emoji:'💁‍♀️',desc:'Hype best friend',
+   voice:'A warm, hype best friend. Uses "babe", "hun", "obsessed", "we love to see it". Supportive and encouraging, never judgy.',
+   open:['Babe, ','Okay hun, ','Right babe, '],end:' You got this 💖',swaps:[],prop:'none',hair:'long',shades:false,fem:true},
 ];
-const ACCENTS=['#0e6b48','#7b2ff7','#2d6cdf','#e0524d','#e0962a','#d4317c','#0a1f44','#1f9e8a'];
-let PERSONA={name:'Tilly',avatar:'tilly',accent:'#0e6b48',small:false};
+let PERSONA={name:'Tilly',accent:'#0e6b48',style:'chill',skin:'#e8b98f',catch:''};
 
-function styleize(parts){ return parts; }   // talking-style voices on hold; passthrough for now
+function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=(n>>16)+amt,g=((n>>8)&255)+amt,b=(n&255)+amt; r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b)); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+function lighten(hex,amt){ return shade(hex,amt); }
+function curStyle(){ return STYLES.find(s=>s.id===PERSONA.style)||STYLES[0]; }
+function randOpen(a){ return a[Math.floor(Math.random()*a.length)]; }
 
-function lighten(hex,amt){ const n=parseInt(hex.slice(1),16); const r=Math.min(255,(n>>16)+amt),g=Math.min(255,((n>>8)&255)+amt),b=Math.min(255,(n&255)+amt); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
-function avGrad(c){ return `linear-gradient(145deg, ${lighten(c,45)}, ${c})`; }
-function avEmoji(id){ return (AVATARS.find(a=>a.id===id)||AVATARS[0]).emoji; }
+/* talking-style transform for built-in replies */
+function styleize(parts){
+  const st=curStyle();
+  const out=parts.map(p=>({...p}));
+  const textIdx=out.map((p,i)=>p.type==='text'?i:-1).filter(i=>i>=0);
+  if(!textIdx.length) return out;
+  textIdx.forEach((idx,k)=>{
+    let html=out[idx].html;
+    (st.swaps||[]).forEach(([re,rep])=>{ html=html.replace(re,rep); });
+    if(k===0 && st.open && st.open.some(Boolean)) html=randOpen(st.open)+html;
+    out[idx]={...out[idx],html};
+  });
+  const last=textIdx[textIdx.length-1];
+  let tail=''; if(st.end) tail+=st.end; if(PERSONA.catch) tail+=' '+esc(PERSONA.catch);
+  if(tail) out[last]={...out[last],html:out[last].html+tail};
+  return out;
+}
+
+/* the character, drawn as SVG. face=true returns a head-only crop for avatars. */
+function personSVG(face){
+  const st=curStyle(), skin=PERSONA.skin||'#e8b98f', hoodie=PERSONA.accent, hair=st.fem?'#6b4226':'#33271c';
+  const hairSVG = st.hair==='long'
+    ? `<path d="M30,60 Q28,30 60,28 Q92,30 90,60 Q92,88 83,99 L81,62 Q60,46 39,62 L37,99 Q28,88 30,60 Z" fill="${hair}"/>`
+    : `<path d="M34,54 Q33,30 60,29 Q87,30 86,54 Q78,41 60,41 Q42,41 34,54 Z" fill="${hair}"/>`;
+  let eyes;
+  if(st.shades){
+    eyes=`<g><rect x="40" y="53" width="16" height="10" rx="5" fill="#15171a"/><rect x="64" y="53" width="16" height="10" rx="5" fill="#15171a"/>`+
+         `<rect x="55" y="56" width="10" height="3" rx="1.5" fill="#15171a"/><rect x="44" y="55" width="5" height="3" rx="1.5" fill="#3a3f47"/><rect x="68" y="55" width="5" height="3" rx="1.5" fill="#3a3f47"/></g>`;
+  } else {
+    const lash=st.fem?`<path d="M44,55 q5,-3 10,-1" stroke="#2a1f17" stroke-width="1.6" fill="none"/><path d="M66,54 q5,-2 10,1" stroke="#2a1f17" stroke-width="1.6" fill="none"/>`:'';
+    eyes=`<g><ellipse cx="49" cy="58" rx="4.5" ry="5" fill="#fff"/><ellipse cx="71" cy="58" rx="4.5" ry="5" fill="#fff"/>`+
+         `<circle cx="50" cy="59" r="2.4" fill="#2a1f17"/><circle cx="72" cy="59" r="2.4" fill="#2a1f17"/>`+
+         `<path d="M44,51 q5,-2 9,0" stroke="${hair}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M67,51 q5,-2 9,0" stroke="${hair}" stroke-width="2" fill="none" stroke-linecap="round"/>${lash}</g>`;
+  }
+  let prop='';
+  if(st.prop==='headband') prop=`<rect x="33" y="44" width="54" height="6" rx="3" fill="${shade(hoodie,30)}"/>`;
+  if(st.prop==='cap') prop=`<path d="M33,46 Q60,24 87,46 Q60,38 33,46 Z" fill="${shade(hoodie,-12)}"/><rect x="46" y="44" width="28" height="6" rx="3" fill="${shade(hoodie,-30)}"/>`;
+  const mouthId = face?'':'id="buddyMouth"';
+  const head=`<ellipse cx="60" cy="58" rx="27" ry="29" fill="${skin}"/>`+
+    `<ellipse cx="33" cy="61" rx="5" ry="7" fill="${skin}"/><ellipse cx="87" cy="61" rx="5" ry="7" fill="${skin}"/>`+
+    hairSVG+eyes+
+    `<path d="M60,60 q3,6 -2,8" stroke="${shade(skin,-34)}" stroke-width="2" fill="none" stroke-linecap="round"/>`+
+    `<path ${mouthId} d="M52,76 q8,7 16,0" stroke="${shade(skin,-58)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`+prop;
+  if(face) return `<svg class="person-face" viewBox="27 28 66 64" preserveAspectRatio="xMidYMid slice">${head}</svg>`;
+  return `<svg class="person-full" viewBox="0 0 120 132">`+
+    `<path d="M16,132 Q16,90 44,84 L76,84 Q104,90 104,132 Z" fill="${hoodie}"/>`+
+    `<path d="M44,84 Q60,96 76,84 L76,78 L44,78 Z" fill="${shade(hoodie,-22)}"/>`+
+    `<rect x="50" y="72" width="20" height="16" rx="7" fill="${skin}"/>${head}</svg>`;
+}
+
 function savePersona(){ try{ localStorage.setItem('tilly_persona',JSON.stringify(PERSONA)); }catch(e){} }
 function loadPersona(){ try{ const s=localStorage.getItem('tilly_persona'); if(s) PERSONA=Object.assign(PERSONA,JSON.parse(s)); }catch(e){} }
 function applyPersona(){
   const el=document.getElementById('hdrAvatar'); if(!el)return;
-  el.style.background=avGrad(PERSONA.accent); el.textContent=avEmoji(PERSONA.avatar);
-  el.classList.toggle('small',!!PERSONA.small);
+  el.innerHTML=personSVG(true); el.style.background='#eef0ec';
   document.getElementById('hdrName').textContent=PERSONA.name||'Tilly';
-  if(typeof Mascot!=='undefined'&&Mascot.char) Mascot.recolor(PERSONA.accent);
   savePersona();
 }
-function setAvatar(id){ PERSONA.avatar=id; applyPersona(); renderCust(); }
-function setAccent(c){ PERSONA.accent=c; applyPersona(); renderCust(); }
+function refreshChar(){ applyPersona(); const cur=document.querySelector('nav button.on'); if(cur&&cur.dataset.scr==='home')renderHome(); }
+function setStyle(id){ PERSONA.style=id; refreshChar(); renderCust(); }
+function setAccent(c){ PERSONA.accent=c; refreshChar(); renderCust(); }
+function setSkin(c){ PERSONA.skin=c; refreshChar(); renderCust(); }
 function openCust(){ renderCust(); document.getElementById('custPanel').classList.add('open'); }
 function closeCust(){ document.getElementById('custPanel').classList.remove('open'); }
 function renderCust(){
   document.getElementById('custBody').innerHTML=`
-    <h3>Customise your coach</h3>
-    <div class="sub">Make it yours. Different talking styles are coming soon.</div>
+    <h3>Meet your coach</h3>
+    <div class="cust-preview">${personSVG(false)}</div>
     <label class="cust-lbl">Name</label>
-    <input id="custName" class="cust-input" value="${esc(PERSONA.name)}" oninput="PERSONA.name=this.value;applyPersona()" />
-    <label class="cust-lbl">Avatar</label>
-    <div class="av-grid">${AVATARS.map(a=>`<button class="av-opt ${PERSONA.avatar===a.id?'on':''}" onclick="setAvatar('${a.id}')"><span class="av-c" style="background:${avGrad(PERSONA.accent)}">${a.emoji}</span></button>`).join('')}</div>
-    <label class="cust-lbl">Colour</label>
+    <input class="cust-input" value="${esc(PERSONA.name)}" oninput="PERSONA.name=this.value;applyPersona()" />
+    <label class="cust-lbl">Personality</label>
+    <div class="style-list">${STYLES.map(s=>`<button class="style-opt ${PERSONA.style===s.id?'on':''}" onclick="setStyle('${s.id}')"><span class="se">${s.emoji}</span><span><b>${s.label}</b><small>${s.desc}</small></span></button>`).join('')}</div>
+    <label class="cust-lbl">Hoodie colour</label>
     <div class="acc-row">${ACCENTS.map(c=>`<button class="acc-sw ${PERSONA.accent===c?'on':''}" style="background:${c}" onclick="setAccent('${c}')"></button>`).join('')}</div>
-    <label class="cust-toggle"><span>Small avatar</span><button class="toggle ${PERSONA.small?'on':''}" onclick="PERSONA.small=!PERSONA.small;applyPersona();renderCust()"></button></label>
+    <label class="cust-lbl">Skin tone</label>
+    <div class="acc-row">${SKINS.map(c=>`<button class="acc-sw ${PERSONA.skin===c?'on':''}" style="background:${c}" onclick="setSkin('${c}')"></button>`).join('')}</div>
+    <label class="cust-lbl">Catchphrase (optional)</label>
+    <input class="cust-input" placeholder="e.g. stay liquid 😎" value="${esc(PERSONA.catch||'')}" oninput="PERSONA.catch=this.value;savePersona()" />
     <button class="ai-close" onclick="closeCust()">Done</button>`;
 }
 
 /* =====================================================================
-   MASCOT — the corner character that reacts to your money
+   BUDDY — the character living in the Safe-to-Spend card. Mood + speech.
+   (Object kept named Mascot so existing call sites stay valid.)
    ===================================================================== */
+const BUDDYMOUTH={happy:'M52,76 q8,7 16,0',neutral:'M52,77 h16',worried:'M52,80 q8,-6 16,0',celebrate:'M50,75 q10,11 20,0 q-10,3 -20,0'};
+function buddyLine(sts){ const base= sts<60?`A bit tight, ${num(sts)} safe to spend`:`${num(sts)} to play with before payday`; return styleize([{type:'text',html:base}])[0].html; }
 const Mascot={
-  char:null, bubble:null, el:null, hideT:null,
-  MOUTHS:{happy:'M38,60 Q50,72 62,60',neutral:'M40,63 Q50,67 60,63',worried:'M40,66 Q50,58 60,66',celebrate:'M39,59 Q50,77 61,59 Z',thinking:'M45,64 Q50,68 55,64'},
-  init(){
-    this.el=document.getElementById('mascot'); this.char=document.getElementById('mascotChar'); this.bubble=document.getElementById('mascotBubble');
-    if(!this.char)return; this.recolor(PERSONA.accent); this.mood('happy'); this.blink();
-  },
-  recolor(c){ if(!this.char)return;
-    const f=this.char.querySelector('.m-fill'); if(f)f.setAttribute('fill',c);
-    const sp=this.char.querySelector('.m-sprout'); if(sp)sp.setAttribute('fill',lighten(c,35));
-    this.char.querySelectorAll('.m-arm').forEach(a=>a.setAttribute('stroke',c));
-  },
-  mood(m){ if(!this.char)return;
-    const mouth=document.getElementById('mMouth'), bL=document.getElementById('browL'), bR=document.getElementById('browR');
-    mouth.setAttribute('d',this.MOUTHS[m]||this.MOUTHS.neutral);
-    mouth.setAttribute('fill',m==='celebrate'?'#fff':'none');
-    this.el.classList.toggle('celebrate',m==='celebrate');
-    if(m==='worried'){ bL.setAttribute('d','M34,40 L46,35'); bR.setAttribute('d','M54,35 L66,40'); }
-    else if(m==='happy'||m==='celebrate'){ bL.setAttribute('d','M34,36 L46,36'); bR.setAttribute('d','M54,36 L66,36'); }
-    else { bL.setAttribute('d','M34,38 L46,38'); bR.setAttribute('d','M54,38 L66,38'); }
-  },
-  react(){ if(!this.char)return; this.char.classList.remove('pop'); void this.char.offsetWidth; this.char.classList.add('pop'); },
-  say(html,m,ms=4600){ if(!this.bubble)return; if(m)this.mood(m); this.react();
-    this.bubble.innerHTML=html; this.bubble.classList.add('show');
-    clearTimeout(this.hideT); this.hideT=setTimeout(()=>this.bubble.classList.remove('show'),ms);
-  },
-  blink(){ const e=document.getElementById('mEyes'); if(e){ e.classList.add('blink'); setTimeout(()=>e.classList.remove('blink'),120); }
-    setTimeout(()=>this.blink(), 2600+Math.random()*2800);
-  },
-  show(v){ if(this.el)this.el.classList.toggle('show',v); },
+  init(){},
+  recolor(){},
+  mood(m){ const el=document.getElementById('buddyMouth'); if(el)el.setAttribute('d',BUDDYMOUTH[m]||BUDDYMOUTH.happy); },
+  say(html,m){ if(m)this.mood(m); const el=document.getElementById('heroSay'); if(el)el.innerHTML=html; },
+  context(scr){ if(scr==='home') this.mood(Engine.safeToSpend()<60?'worried':'happy'); },
   tap(){ const cur=document.querySelector('nav button.on').dataset.scr; if(cur!=='chat') go('chat'); },
-  context(scr){
-    if(!this.el)return;
-    if(scr==='chat'){ this.show(false); return; }
-    this.show(true);
-    if(scr==='home') this.mood(Engine.safeToSpend()<60?'worried':'happy');
-    else if(scr==='goals') this.mood(Engine.monthlySurplus()>0?'happy':'worried');
-    else if(scr==='insights') this.mood(Engine.goingOutPct(4)>=45?'worried':'neutral');
-    else this.mood('happy');
-  }
+  show(){}
 };
 
 function boot(){
