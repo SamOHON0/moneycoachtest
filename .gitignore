@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# secrets — never commit your API key
+.env
+.env.local
+.env*.local
+
+# vercel
+.vercel
+
+# os
+.DS_Store
+Thumbs.db
+
+# scratch
+_probe.txt

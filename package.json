@@ -1,0 +1,10 @@
+{
+  "name": "tilly-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tilly — AI money coach prototype. Static UI + one serverless function for Claude Haiku.",
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
