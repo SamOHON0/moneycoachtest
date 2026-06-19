@@ -894,6 +894,13 @@ const AI={
     }catch(e){ this.available=false; }
     updateAIBar();
   },
+  async checkHosted(){
+    try{
+      const r=await fetch(this.hostedPath,{method:'GET'});      // handler is POST-only -> 405 means it exists
+      if(r.ok || r.status===405 || r.status===500){ this.mode='hosted'; this.available=true; updateAIBar(); return true; }
+    }catch(e){}
+    return false;
+  },
   system(){ return `You are Tilly, an Irish money coach inside a chat app. Voice: warm, casual, a little cheeky, never preachy, never shaming. Keep replies short (1-3 sentences). Plain text only, no markdown, no bullet lists. All money is euro.
 HARD RULE: only state numbers that appear in the FACTS below. Never calculate or invent a figure. If a number you need isn't in FACTS, say you'll check rather than guess.`; },
   facts(msg){
@@ -963,8 +970,14 @@ async function aiRespond(text){
       if(!bubble){ hideTyping(); bubble=startStreamBubble(); }
       acc+=tok; bubble.querySelector('.bubble').textContent=acc.replace(/^\s+/,''); cdown();
     });
-  }catch(e){ hideTyping(); if(bubble)bubble.remove(); AI.available=false; updateAIBar(); addTilly(route(text)); return; }
-  if(!bubble||!acc.trim()){ hideTyping(); if(bubble)bubble.remove(); addTilly(route(text)); return; }
+  }catch(e){
+    hideTyping(); if(bubble)bubble.remove();
+    const wasHosted=AI.mode==='hosted';
+    AI.available=false; AI.mode='off'; updateAIBar();
+    if(wasHosted) addTilly([{type:'text',html:`Couldn't reach the Claude API just now. Make sure <code>ANTHROPIC_API_KEY</code> is set in Vercel and you're on the deployed URL, not the local file. Using the built-in coach for now.`}]);
+    addTilly(smartRoute(text)); return;
+  }
+  if(!bubble||!acc.trim()){ hideTyping(); if(bubble)bubble.remove(); addTilly(smartRoute(text)); return; }
   convo.push({role:'user',content:text},{role:'assistant',content:acc.trim()});
 }
 
@@ -1037,6 +1050,13 @@ function whatIfReply(msg){
   }
   return [{type:'text',html:`Tell me which to cut (e.g. "what if I cancel Netflix and the gym") and I'll show the 3-month impact. Or open the <b>Goals</b> tab for the full what-if simulator with a loan slider.`}];
 }
+function howAffordReply(){
+  const s=Engine.monthlySurplus();
+  if(s>0) return [{type:'text',html:`Right now you've about ${num(s)} a month spare after everything, so you'd save toward it over a few months. Set it as a goal and I'll factor it into your affordability answers. The Goals tab has a what-if slider to get there faster.`},
+    {type:'followups',items:['Where can I save?','Have I partied too much?']}];
+  return [{type:'text',html:`Honest answer: at the minute you're spending about ${num(-s)} more than you earn each month, so there's nothing spare to put toward it yet. The good news is it's mostly nights out and taxis, so it's fixable. Trim a couple of the big levers in the Goals tab and you'll free up the room.`},
+    {type:'followups',items:['What if I halved my nights out?','Where can I save?','Have I partied too much?']}];
+}
 function saveReply(){
   const nights=round2(Engine.spend(4,'Nightlife')/2), taxis=round2(Engine.spend(4,'Transport')/2);
   return [{type:'text',html:`Biggest levers first, given the month you've had:<br><br>• <b>Nights out</b> — one fewer big weekend saves about ${num(nights)}/mo<br>• <b>Taxis</b> — half of them to the night bus, ~${num(taxis)}/mo<br>• <b>Disney+ & Prime</b> — barely used, ${num(18.98)}/mo<br><br>That trio alone is about ${num(nights+taxis+18.98)}/mo back in your pocket. The Goals tab simulates it live with a slider.`}];
@@ -1057,6 +1077,7 @@ function route(msg){
   const dayRef = (m.match(/\b(?:on|by)\s+(?:the\s+)?(\d{1,2})(?:st|nd|rd|th)?\b/)||[])[1];
 
   if(/what if|cancel/.test(m)) return whatIfReply(msg);
+  if(amount==null && /(how (can|do|could) i afford|afford to (go|get|buy)|afford a |save (up )?for|how.*afford.*(holiday|trip|ibiza|marbella|festival))/.test(m)) return howAffordReply();
   if(amount && /(afford|spend|buy|get|cost|grab|book|night out|ticket|€|drop)/.test(m)){
     const d=dayRef?+dayRef:( /saturday|sat\b/.test(m)?20 : /sunday/.test(m)?21 : null);
     return affordReply(amount, d && d>18 && d<29 ? d : null);
@@ -1092,7 +1113,8 @@ CHIPS.forEach(([l,q])=>{const b=document.createElement('button');b.className='ch
 let chatBooted=false;
 function bootChat(){
   if(chatBooted)return; chatBooted=true;
-  AI.check();
+  if(location.protocol==='file:') AI.check();                  // local file: try Ollama only
+  else AI.checkHosted().then(ok=>{ if(!ok) AI.check(); });      // deployed: auto-enable Claude Haiku
   const proj=Engine.projection(),vel=Engine.velocity();
   [
     {d:200,parts:[{type:'text',html:`Morning Sam 👋 Had a look at the accounts after the weekend.`}]},
