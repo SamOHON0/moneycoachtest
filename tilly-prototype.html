@@ -207,8 +207,8 @@
   .person-full{display:block;overflow:visible}
   .hero-row{display:flex;align-items:flex-end;gap:6px}
   .hero-left{flex:1;min-width:0}
-  .hero-char{width:96px;flex:none;align-self:flex-end;margin:0 -8px -22px 0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
-  .hero-char svg{width:96px;display:block}
+  .hero-char{width:90px;height:106px;flex:none;align-self:flex-end;overflow:hidden;margin:0 -2px -12px 0;filter:drop-shadow(0 5px 8px rgba(0,0,0,.22))}
+  .hero-char svg{width:90px;display:block}
   .hero-say{margin-top:9px;display:inline-block;background:rgba(255,255,255,.18);border-radius:13px;border-bottom-left-radius:4px;padding:6px 11px;font-size:12.5px;font-weight:700;line-height:1.35}
   .hero-say .num{color:#fff;font-weight:800}
   .msg.tilly{flex-direction:row;align-items:flex-end;gap:8px}
@@ -216,7 +216,7 @@
   .msg-av svg{width:30px;height:30px;display:block}
   .msg-col{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:100%}
   .cust-preview{display:flex;justify-content:center;background:var(--bg);border-radius:16px;padding:8px;margin-bottom:4px}
-  .cust-preview svg{width:130px}
+  .cust-preview svg{width:104px}
   /* demo switch */
   .demo-switch{display:flex;align-items:center;gap:9px;margin-bottom:14px}
   .demo-lbl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);flex:none}
@@ -1414,16 +1414,16 @@ const SKINS=['#f3d0b0','#e8b98f','#c68a5e','#8d5a36','#5e3a24'];
 const STYLES=[
   {id:'chill',label:'Chill (default)',emoji:'😎',desc:'Relaxed casual guy',
    voice:'Relaxed, friendly, casual. Easy-going. Honest but never preachy, never shaming.',
-   open:[''],end:'',swaps:[],prop:'none',hair:'short',shades:true,fem:false},
+   open:[''],end:'',swaps:[],hat:'beanie',hair:'none',fem:false},
   {id:'surfer',label:'Surfer',emoji:'🏄',desc:'Stoked, dude',
    voice:'A laid-back surfer. Uses "dude", "stoked", "gnarly", "no worries", "totally". Super chill, still gives the real numbers.',
-   open:['Dude, ','Yo, ','Alright so '],end:' Stay stoked 🤙',swaps:[[/\bHonestly\b/g,'Real talk']],prop:'headband',hair:'short',shades:true,fem:false},
+   open:['Dude, ','Yo, ','Alright so '],end:' Stay stoked 🤙',swaps:[[/\bHonestly\b/g,'Real talk']],hat:'none',hair:'surf',fem:false},
   {id:'frat',label:'Frat guy',emoji:'🧢',desc:'Hyped, bro',
    voice:'A hyped American frat bro. Uses "bro", "dude", "LET\'S GO", "send it". High energy, never wrong on the numbers.',
-   open:['Bro, ','Ayy bro, ','Okay listen bro, '],end:" LET'S GO 🙌",swaps:[],prop:'cap',hair:'short',shades:false,fem:false},
+   open:['Bro, ','Ayy bro, ','Okay listen bro, '],end:" LET'S GO 🙌",swaps:[],hat:'cap',hair:'none',fem:false},
   {id:'bestie',label:'Bestie',emoji:'💁‍♀️',desc:'Hype best friend',
    voice:'A warm, hype best friend. Uses "babe", "hun", "obsessed", "we love to see it". Supportive and encouraging, never judgy.',
-   open:['Babe, ','Okay hun, ','Right babe, '],end:' You got this 💖',swaps:[],prop:'none',hair:'long',shades:false,fem:true},
+   open:['Babe, ','Okay hun, ','Right babe, '],end:' You got this 💖',swaps:[],hat:'none',hair:'long',fem:true},
 ];
 let PERSONA={name:'Tilly',accent:'#0e6b48',style:'chill',skin:'#e8b98f',catch:''};
 
@@ -1450,36 +1450,37 @@ function styleize(parts){
   return out;
 }
 
-/* the character, drawn as SVG. face=true returns a head-only crop for avatars. */
+/* the character — South Park style cartoon. face=true returns a head crop. */
 function personSVG(face){
-  const st=curStyle(), skin=PERSONA.skin||'#e8b98f', hoodie=PERSONA.accent, hair=st.fem?'#6b4226':'#33271c';
-  const hairSVG = st.hair==='long'
-    ? `<path d="M30,60 Q28,30 60,28 Q92,30 90,60 Q92,88 83,99 L81,62 Q60,46 39,62 L37,99 Q28,88 30,60 Z" fill="${hair}"/>`
-    : `<path d="M34,54 Q33,30 60,29 Q87,30 86,54 Q78,41 60,41 Q42,41 34,54 Z" fill="${hair}"/>`;
-  let eyes;
-  if(st.shades){
-    eyes=`<g><rect x="40" y="53" width="16" height="10" rx="5" fill="#15171a"/><rect x="64" y="53" width="16" height="10" rx="5" fill="#15171a"/>`+
-         `<rect x="55" y="56" width="10" height="3" rx="1.5" fill="#15171a"/><rect x="44" y="55" width="5" height="3" rx="1.5" fill="#3a3f47"/><rect x="68" y="55" width="5" height="3" rx="1.5" fill="#3a3f47"/></g>`;
-  } else {
-    const lash=st.fem?`<path d="M44,55 q5,-3 10,-1" stroke="#2a1f17" stroke-width="1.6" fill="none"/><path d="M66,54 q5,-2 10,1" stroke="#2a1f17" stroke-width="1.6" fill="none"/>`:'';
-    eyes=`<g><ellipse cx="49" cy="58" rx="4.5" ry="5" fill="#fff"/><ellipse cx="71" cy="58" rx="4.5" ry="5" fill="#fff"/>`+
-         `<circle cx="50" cy="59" r="2.4" fill="#2a1f17"/><circle cx="72" cy="59" r="2.4" fill="#2a1f17"/>`+
-         `<path d="M44,51 q5,-2 9,0" stroke="${hair}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M67,51 q5,-2 9,0" stroke="${hair}" stroke-width="2" fill="none" stroke-linecap="round"/>${lash}</g>`;
+  const st=curStyle(), skin=PERSONA.skin||'#e8b98f', coat=PERSONA.accent, OL='#16181d', hairCol='#3a2a1d';
+  let lid='';
+  if(st.hat==='beanie'){
+    lid=`<path d="M20,30 Q20,7 50,6 Q80,7 80,30 Z" fill="${shade(coat,-14)}" stroke="${OL}" stroke-width="2"/>`
+       +`<path d="M17,34 Q17,27 24,26 L76,26 Q83,27 83,34 Q50,41 17,34 Z" fill="${coat}" stroke="${OL}" stroke-width="2"/>`
+       +`<circle cx="50" cy="7" r="6.5" fill="${shade(coat,45)}" stroke="${OL}" stroke-width="2"/>`;
+  } else if(st.hat==='cap'){
+    lid=`<path d="M19,32 Q19,8 50,7 Q81,8 81,32 Q50,26 19,32 Z" fill="${coat}" stroke="${OL}" stroke-width="2"/>`
+       +`<rect x="41" y="22" width="18" height="9" rx="2.5" fill="${shade(coat,-30)}" stroke="${OL}" stroke-width="1.6"/>`;
   }
-  let prop='';
-  if(st.prop==='headband') prop=`<rect x="33" y="44" width="54" height="6" rx="3" fill="${shade(hoodie,30)}"/>`;
-  if(st.prop==='cap') prop=`<path d="M33,46 Q60,24 87,46 Q60,38 33,46 Z" fill="${shade(hoodie,-12)}"/><rect x="46" y="44" width="28" height="6" rx="3" fill="${shade(hoodie,-30)}"/>`;
-  const mouthId = face?'':'id="buddyMouth"';
-  const head=`<ellipse cx="60" cy="58" rx="27" ry="29" fill="${skin}"/>`+
-    `<ellipse cx="33" cy="61" rx="5" ry="7" fill="${skin}"/><ellipse cx="87" cy="61" rx="5" ry="7" fill="${skin}"/>`+
-    hairSVG+eyes+
-    `<path d="M60,60 q3,6 -2,8" stroke="${shade(skin,-34)}" stroke-width="2" fill="none" stroke-linecap="round"/>`+
-    `<path ${mouthId} d="M52,76 q8,7 16,0" stroke="${shade(skin,-58)}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`+prop;
-  if(face) return `<svg class="person-face" viewBox="27 28 66 64" preserveAspectRatio="xMidYMid slice">${head}</svg>`;
-  return `<svg class="person-full" viewBox="0 0 120 132">`+
-    `<path d="M16,132 Q16,90 44,84 L76,84 Q104,90 104,132 Z" fill="${hoodie}"/>`+
-    `<path d="M44,84 Q60,96 76,84 L76,78 L44,78 Z" fill="${shade(hoodie,-22)}"/>`+
-    `<rect x="50" y="72" width="20" height="16" rx="7" fill="${skin}"/>${head}</svg>`;
+  let hairBack='',hairFront='';
+  if(st.hair==='surf'){
+    hairFront=`<path d="M18,32 Q14,8 34,12 Q40,2 52,9 Q64,2 73,13 Q88,14 82,33 Q70,22 50,22 Q30,22 18,32 Z" fill="#e6c259" stroke="${OL}" stroke-width="2"/>`;
+  } else if(st.hair==='long'){
+    hairBack=`<path d="M14,50 Q9,10 50,8 Q91,10 86,50 Q88,80 78,92 L74,42 Q50,26 26,42 L22,92 Q12,80 14,50 Z" fill="${hairCol}" stroke="${OL}" stroke-width="2"/>`;
+    hairFront=`<path d="M22,36 Q34,22 50,23 Q66,22 78,36 Q66,30 50,30 Q34,30 22,36 Z" fill="${hairCol}"/>`;
+  }
+  const lash=st.fem?`<path d="M35,40 q4,-3 8,-2" stroke="${OL}" stroke-width="1.6" fill="none"/><path d="M57,38 q4,-1 8,2" stroke="${OL}" stroke-width="1.6" fill="none"/>`:'';
+  const eyes=`<g stroke="${OL}" stroke-width="1.8"><ellipse cx="43" cy="45" rx="9" ry="11.5" fill="#fff"/><ellipse cx="57" cy="45" rx="9" ry="11.5" fill="#fff"/></g>`
+            +`<circle cx="47" cy="46" r="2.5" fill="${OL}"/><circle cx="53" cy="46" r="2.5" fill="${OL}"/>${lash}`;
+  const mouth=`<path ${face?'':'id="buddyMouth"'} d="M44,62 Q50,68 56,62" stroke="${OL}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  const headGroup=`${hairBack}<circle cx="50" cy="45" r="33" fill="${skin}" stroke="${OL}" stroke-width="2"/>${eyes}${mouth}${hairFront}${lid}`;
+  if(face) return `<svg class="person-face" viewBox="12 0 76 84" preserveAspectRatio="xMidYMid slice">${headGroup}</svg>`;
+  const body=`<g stroke="${OL}" stroke-width="2">`
+    +`<rect x="33" y="118" width="13" height="20" rx="3" fill="${shade(coat,-28)}"/><rect x="54" y="118" width="13" height="20" rx="3" fill="${shade(coat,-28)}"/>`
+    +`<ellipse cx="36" cy="139" rx="9" ry="5" fill="${OL}"/><ellipse cx="64" cy="139" rx="9" ry="5" fill="${OL}"/>`
+    +`<path d="M30,86 Q30,80 37,80 L63,80 Q70,80 70,86 L74,120 L26,120 Z" fill="${coat}"/>`
+    +`<ellipse cx="25" cy="106" rx="7" ry="8.5" fill="${skin}"/><ellipse cx="75" cy="106" rx="7" ry="8.5" fill="${skin}"/></g>`;
+  return `<svg class="person-full" viewBox="0 0 100 148">${body}${headGroup}</svg>`;
 }
 
 function savePersona(){ try{ localStorage.setItem('tilly_persona',JSON.stringify(PERSONA)); }catch(e){} }
@@ -1517,7 +1518,7 @@ function renderCust(){
    BUDDY — the character living in the Safe-to-Spend card. Mood + speech.
    (Object kept named Mascot so existing call sites stay valid.)
    ===================================================================== */
-const BUDDYMOUTH={happy:'M52,76 q8,7 16,0',neutral:'M52,77 h16',worried:'M52,80 q8,-6 16,0',celebrate:'M50,75 q10,11 20,0 q-10,3 -20,0'};
+const BUDDYMOUTH={happy:'M44,62 Q50,68 56,62',neutral:'M44,63 H56',worried:'M44,65 Q50,59 56,65',celebrate:'M43,61 Q50,71 57,61 Q50,65 43,61'};
 function buddyLine(sts){ const base= sts<60?`A bit tight, ${num(sts)} safe to spend`:`${num(sts)} to play with before payday`; return styleize([{type:'text',html:base}])[0].html; }
 const Mascot={
   init(){},
