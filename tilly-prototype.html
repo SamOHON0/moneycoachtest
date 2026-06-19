@@ -427,7 +427,7 @@
       <h1>You're all set.</h1>
       <p>I've read your accounts. Here's what I found straight away:</p>
       <div class="bank" style="cursor:default"><div class="bl" style="background:#0e6b48">€</div><div class="bi"><div class="n" id="onbSts">€0 safe to spend</div><div class="t">before payday on the 27th</div></div></div>
-      <div class="bank" style="cursor:default"><div class="bl" style="background:#e0962a">☕</div><div class="bi"><div class="n" id="onbCoffee">Coffee habit spotted</div><div class="t">tap around, ask me anything</div></div></div>
+      <div class="bank" style="cursor:default"><div class="bl" style="background:#7b2ff7">🍻</div><div class="bi"><div class="n" id="onbCoffee">Nightlife habit spotted</div><div class="t">tap around, ask me anything</div></div></div>
       <button class="btn" onclick="finishOnb()">Start coaching</button>
       <div class="dots"><i></i><i></i><i class="on"></i></div>
     </div>
@@ -442,7 +442,7 @@
 
 /* ---------- seeded RNG + transaction generator ---------- */
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-const rnd = mulberry32(20260618);
+const rnd = mulberry32(20260619);
 const pick = a => a[Math.floor(rnd()*a.length)];
 const between = (a,b)=> a + rnd()*(b-a);
 const round2 = x => Math.round(x*100)/100;
@@ -450,69 +450,104 @@ const D = (m,d)=> new Date(2026,m,d);                 // m: 4=May, 5=June
 const TODAY = D(5,18);
 
 const MERCH = {
-  Coffee:['3FE Coffee','Insomnia','Starbucks','Two Pups','Butlers'],
-  EatingOut:['Sprout & Co','Boojum','Camile','The Fumbally','Brother Hubbard'],
-  Takeaway:['Deliveroo','Just Eat','Uber Eats'],
-  Groceries:['Tesco','Lidl','Dunnes','SuperValu','Aldi'],
-  Transport:['Leap Top-Up','Free Now','TFI Go','Circle K'],
-  Shopping:['Penneys','Zara','Amazon','Brown Thomas','Decathlon'],
-  Entertainment:['Cineworld','Ticketmaster','Eventbrite','The Sugar Club'],
+  Coffee:['3FE','Vice Coffee Inc','Coffeeangel','Kaph','Clement & Pekoe','Two Boys Brew','Bear Market Coffee','Network Roasters','Butlers'],
+  EatingOut:['Base Wood Fired Ranelagh','Cinnamon Ranelagh','Host Ranelagh','Bujo Sandymount','Bunsen','WoWBurger','Eddie Rockets','Boojum Ranelagh','Zambrero','Camile Thai','Tang','Sprout & Co','147 Deli','Featherblade','Pi Pizza','Las Tapas de Lola','Sano Pizza'],
+  Nightlife:['Copper Face Jacks','The Bridge 1859','Paddy Cullens','Searsons Baggot St','37 Dawson St','The Ivy Dawson','Xico','Opium','Lost Lane','Pygmalion','The Wellington','Devitts','The Barge','Against the Grain','Diceys Garden','The Workmans','Grogans','Kehoes','PMacs','Wigwam','Index Dublin'],
+  PreDrinks:['OBriens Off Licence','Mollys Off Licence','Deveney Dundrum','Tesco (wine)'],
+  Takeaway:['Apache Pizza','Zaytoon','Dominos','Tolteca','Box Burger','Just Eat','Deliveroo','Uber Eats','Mr Big Stuff'],
+  Transport:['FREENOW','Lynk Taxi','Uber','Leap Top-Up','Go-Ahead'],
+  Travel:['Ryanair','Aer Lingus','Airbnb','Booking.com','Irish Rail','Aircoach','Trainline'],
+  Personal:['Boots Pharmacy','Sam McCauley','The Grooming Rooms','LloydsPharmacy','Anytime Barber'],
+  Groceries:['Tesco','Dunnes Stores','SuperValu','Lidl','Aldi','Spar'],
+  Shopping:['Brown Thomas','Zara Dundrum','Arnotts','JD Sports','ASOS','Lululemon','Penneys'],
 };
 const RECUR = [
-  {merchant:'Rent',             amount:1150,  cat:'Rent',          acc:'BOI',     day:28},
-  {merchant:'Three',            amount:89,    cat:'Bills',         acc:'BOI',     day:19},
-  {merchant:'Electric Ireland', amount:95,    cat:'Bills',         acc:'BOI',     day:23},
-  {merchant:'Car insurance',    amount:42,    cat:'Bills',         acc:'BOI',     day:26},
-  {merchant:'FlyeFit Gym',      amount:39.99, cat:'Health',        acc:'BOI',     day:20},
+  {merchant:'Rent',             amount:1300,  cat:'Rent',          acc:'BOI',     day:28},
+  {merchant:'iCloud+',          amount:2.99,  cat:'Subscriptions', acc:'Revolut', day:17},
+  {merchant:'Revolut Premium',  amount:7.99,  cat:'Subscriptions', acc:'Revolut', day:18},
+  {merchant:'Three',            amount:45,    cat:'Bills',         acc:'BOI',     day:19},
+  {merchant:'FlyeFit Gym',      amount:45,    cat:'Health',        acc:'BOI',     day:20},
+  {merchant:'Amazon Prime',     amount:8.99,  cat:'Subscriptions', acc:'Revolut', day:21},
   {merchant:'Spotify',          amount:11.99, cat:'Subscriptions', acc:'Revolut', day:22},
+  {merchant:'Electric Ireland', amount:80,    cat:'Bills',         acc:'BOI',     day:23},
   {merchant:'Netflix',          amount:17.99, cat:'Subscriptions', acc:'Revolut', day:24},
+  {merchant:'Disney+',          amount:9.99,  cat:'Subscriptions', acc:'Revolut', day:25},
+  {merchant:'VHI Health',       amount:130,   cat:'Bills',         acc:'BOI',     day:26},
+];
+const GIGS=[
+  {m:4,d:3,name:'Vicar Street gig',amt:52},{m:4,d:10,name:'3Arena concert',amt:89},
+  {m:4,d:17,name:'Whelans live',amt:24},{m:4,d:24,name:'Iveagh Gardens fest',amt:74},
+  {m:5,d:6,name:'The Academy show',amt:31},{m:5,d:13,name:'Trinity Summer Series',amt:68},
+];
+const TRIPS=[
+  {m:4,d:2,name:'Irish Rail',amt:24},{m:4,d:8,name:'Ryanair',amt:118},
+  {m:4,d:8,name:'Airbnb Lisbon',amt:184},{m:4,d:14,name:'Aircoach',amt:12},
+  {m:5,d:9,name:'Aer Lingus',amt:96},{m:5,d:16,name:'Aircoach',amt:12},
 ];
 let TX=[]; let _id=1;
 function add(date,merchant,amount,category,account,recurring=false){
   TX.push({id:_id++,date,merchant,amount:round2(amount),category,account,recurring});
 }
-add(D(4,27),'Salary — Acme Studios',2750,'Income','BOI');
+add(D(4,27),'Salary — Lawless & Co',4000,'Income','BOI');
+function nightOut(date){
+  if(rnd()<0.6) add(date,pick(MERCH.PreDrinks),-between(13,32),'Nightlife','Revolut');
+  const rounds=1+Math.floor(rnd()*3);
+  for(let i=0;i<rounds;i++) add(date,pick(MERCH.Nightlife),-between(14,42),'Nightlife','Revolut');
+  if(rnd()<0.45) add(date,pick(['Copper Face Jacks','Opium','Pygmalion','Index Dublin','Lost Lane']),-between(10,20),'Nightlife','Revolut');
+  if(rnd()<0.62) add(date,pick(MERCH.Nightlife),-between(18,52),'Nightlife','Revolut');
+  if(rnd()<0.7) add(date,pick(['Zaytoon','Apache Pizza','Mr Big Stuff','Tolteca']),-between(7,15),'Takeaway','Revolut');
+  if(rnd()<0.8) add(date,pick(['FREENOW','Lynk Taxi','Uber']),-between(11,24),'Transport','Revolut');
+}
 function genMonth(m,maxDay){
   RECUR.forEach(r=>{ if(r.day<=maxDay){ let a=r.amount; if(r.merchant==='Spotify'&&m===4)a=9.99; add(D(m,r.day),r.merchant,-a,r.cat,r.acc,true);} });
+  GIGS.filter(g=>g.m===m&&g.d<=maxDay).forEach(g=>add(D(m,g.d),g.name,-g.amt,'Concerts','Revolut'));
+  TRIPS.filter(g=>g.m===m&&g.d<=maxDay).forEach(g=>add(D(m,g.d),g.name,-g.amt,'Travel','Revolut'));
   for(let d=1;d<=maxDay;d++){
-    const date=D(m,d), dow=date.getDay(), weekday=dow>=1&&dow<=5;
-    if(weekday && rnd()<0.85) add(date,pick(MERCH.Coffee),-between(3.4,4.3),'Coffee','Revolut');
-    if(weekday && rnd()<0.40) add(date,pick(MERCH.EatingOut),-between(8,15),'EatingOut','Revolut');
-    const tk=(dow===4||dow===5||dow===6)?0.36:0.09;
-    if(rnd()<tk) add(date,pick(MERCH.Takeaway),-between(18,33),'Takeaway','Revolut');
-    if(rnd()<0.27) add(date,pick(MERCH.Groceries),-between(20,56),'Groceries','Revolut');
-    if(rnd()<0.42) add(date,pick(MERCH.Transport),-between(2.5,24),'Transport','Revolut');
-    if(rnd()<0.08) add(date,pick(MERCH.Shopping),-between(15,80),'Shopping','Revolut');
-    if((dow===5||dow===6)&&rnd()<0.25) add(date,pick(MERCH.Entertainment),-between(12,55),'Entertainment','Revolut');
+    const date=D(m,d), dow=date.getDay(), weekday=dow>=1&&dow<=5, weekend=dow===5||dow===6;
+    if(weekday && rnd()<0.8) add(date,pick(MERCH.Coffee),-between(3.4,4.6),'Coffee','Revolut');
+    if(weekend && rnd()<0.55) add(date,pick(MERCH.Coffee),-between(3.6,5.2),'Coffee','Revolut');
+    if(weekend && rnd()<0.7) add(date,pick(MERCH.EatingOut),-between(12,34),'EatingOut','Revolut');
+    else if(weekday && rnd()<0.4) add(date,pick(MERCH.EatingOut),-between(9,18),'EatingOut','Revolut');
+    let p = dow===5?0.78 : dow===6?0.86 : dow===4?0.45 : 0.1;
+    if(GIGS.some(g=>g.m===m&&g.d===d)) p=Math.max(p,0.9);
+    if(rnd()<p) nightOut(date);
+    if(rnd()<0.18) add(date,pick(['Deliveroo','Just Eat','Uber Eats','Dominos']),-between(16,32),'Takeaway','Revolut');
+    if(rnd()<0.22) add(date,pick(MERCH.Groceries),-between(14,48),'Groceries','Revolut');
+    if(rnd()<0.3) add(date,pick(['Leap Top-Up','Go-Ahead']),-between(3,14),'Transport','Revolut');
+    if(rnd()<0.09) add(date,pick(MERCH.Shopping),-between(18,110),'Shopping','Revolut');
+    if(rnd()<0.06) add(date,pick(MERCH.Personal),-between(10,32),'Personal','Revolut');
   }
 }
 genMonth(4,31); genMonth(5,18);
 
 /* ---------- static account + product config ---------- */
 const ACCOUNTS=[
-  {name:'Revolut',type:'Day-to-day spending',available:286.40,color:'#0a1f44',short:'R'},
-  {name:'Bank of Ireland',type:'Salary + direct debits',available:430.00,color:'#0e6b48',short:'BOI'},
+  {name:'Revolut',type:'Day-to-day spending',available:200.40,color:'#0a1f44',short:'R'},
+  {name:'Bank of Ireland',type:'Salary + direct debits',available:450.00,color:'#0e6b48',short:'BOI'},
 ];
-const INCOME={label:'Salary',amount:2750,day:27};
-const BUFFER=120;
-const CATS={Coffee:'#b5651d',EatingOut:'#e0962a',Takeaway:'#e0524d',Groceries:'#15b577',
-  Transport:'#0a1f44',Shopping:'#8a4fc7',Entertainment:'#d4317c',Bills:'#5b6b63',
-  Subscriptions:'#0e6b48',Health:'#1f9e8a',Rent:'#3a4a43'};
-const CATLABEL={Coffee:'Coffee',EatingOut:'Eating out',Takeaway:'Takeaways',Groceries:'Groceries',
-  Transport:'Transport',Shopping:'Shopping',Entertainment:'Entertainment',Bills:'Bills & utilities',
-  Subscriptions:'Subscriptions',Health:'Health & fitness',Rent:'Rent'};
-const DISC=['Coffee','EatingOut','Takeaway','Groceries','Transport','Shopping','Entertainment'];
+const INCOME={label:'Salary',amount:4000,day:27};
+const BUFFER=150;
+const CATS={Coffee:'#b5651d',EatingOut:'#e0962a',Nightlife:'#7b2ff7',Takeaway:'#e0524d',
+  Transport:'#0a1f44',Concerts:'#d4317c',Travel:'#1f9e8a',Personal:'#8a8d4a',Groceries:'#15b577',
+  Shopping:'#2d6cdf',Bills:'#5b6b63',Subscriptions:'#0e6b48',Health:'#e07a5f',Rent:'#3a4a43'};
+const CATLABEL={Coffee:'Coffee',EatingOut:'Eating out',Nightlife:'Nightlife',Takeaway:'Takeaways',
+  Transport:'Transport & taxis',Concerts:'Concerts & gigs',Travel:'Travel',Personal:'Personal care',
+  Groceries:'Groceries',Shopping:'Shopping',Bills:'Bills & utilities',Subscriptions:'Subscriptions',
+  Health:'Health & fitness',Rent:'Rent'};
+const DISC=['Coffee','EatingOut','Nightlife','Takeaway','Transport','Concerts','Travel','Personal','Groceries','Shopping'];
 
 const SUBSCRIPTIONS=[
   {name:'Netflix', amount:17.99, color:'#e0524d', note:'Standard plan', flag:null},
   {name:'Spotify', amount:11.99, color:'#15b577', note:'Premium',       flag:'Up from €9.99 last month'},
-  {name:'FlyeFit Gym', amount:39.99, color:'#0a1f44', note:'Only 3 visits in May', flag:'€13.33 a visit — worth it?'},
-  {name:'Audible', amount:9.99, color:'#e0962a', note:'Free trial', flag:'Trial converts in 3 days'},
+  {name:'Disney+', amount:9.99, color:'#2d6cdf', note:'Standard', flag:'Watched once since March'},
+  {name:'Amazon Prime', amount:8.99, color:'#e0962a', note:'Annual billed monthly', flag:null},
+  {name:'Revolut Premium', amount:7.99, color:'#0a1f44', note:'Perks plan', flag:'Using the perks?'},
+  {name:'iCloud+', amount:2.99, color:'#5b6b63', note:'200GB storage', flag:null},
 ];
 const GOALS=[
-  {name:'Lisbon trip',  emoji:'🌅', target:1200, saved:480, deadline:D(8,1)},
-  {name:'New laptop',   emoji:'💻', target:1400, saved:1050, deadline:null},
-  {name:'Rainy-day fund',emoji:'🌧️', target:2000, saved:600, deadline:null},
+  {name:'Marbella in August', emoji:'🏖️', target:1500, saved:320, deadline:D(7,1)},
+  {name:'Electric Picnic',    emoji:'🎪', target:700,  saved:180, deadline:D(8,1)},
+  {name:'Rainy-day fund',     emoji:'🌧️', target:2000, saved:240, deadline:null},
 ];
 
 /* =====================================================================
@@ -559,6 +594,11 @@ const Engine = {
   monthlySurplus(){ return round2(INCOME.amount - this.monthlyRecurring() - this.monthlyDiscretionary()); },
 
   coffeeSave(){ const c=this.count(4,'Coffee'); return round2(Math.max(0,c-8)*(this.spend(4,'Coffee')/c)); },
+
+  nightsOut(m){ return new Set(TX.filter(t=>t.date.getMonth()===m&&t.category==='Nightlife').map(t=>t.date.getDate())).size; },
+  goingOut(m){ return round2(this.spend(m,'Nightlife')+this.spend(m,'Concerts')+this.spend(m,'Takeaway')+this.spend(m,'Transport')); },
+  goingOutPct(m){ return Math.round(this.goingOut(m)/INCOME.amount*100); },
+  avgPerNight(m){ const n=this.nightsOut(m); return n?round2(this.spend(m,'Nightlife')/n):0; },
 };
 
 /* ---------- formatting ---------- */
@@ -611,11 +651,11 @@ function renderHome(){
 
     <div class="sec-title">Tilly's noticing</div>
     <div class="card nudge"><div class="tag">⚡ Heads up</div>
-      <p>Your ${num(89)} <b>Three</b> bill goes out tomorrow. It's already set aside, so your ${num(sts)} safe-to-spend accounts for it. You're grand.</p></div>
-    <div class="card nudge"><div class="tag">⚡ Pace check</div>
-      <p>You're spending about <b>${Math.abs(vel.pct)}% ${vel.pct<0?'slower':'faster'}</b> than last month so far — nice one. At this rate you'd dip to ${num(dip.bal)} on the ${ord(dip.day)}, just before payday.</p></div>
+      <p>Your ${num(45)} <b>Three</b> bill goes out tomorrow. It's already set aside, so your ${num(sts)} safe-to-spend accounts for it.</p></div>
+    <div class="card nudge"><div class="tag">⚡ Big month</div>
+      <p>Going out cost about ${num(Engine.goingOut(4))} last month, roughly <b>${Engine.goingOutPct(4)}%</b> of your income, across ${Engine.nightsOut(4)} nights. You're tracking ${Math.abs(vel.pct)}% ${vel.pct<0?'under':'over'} that so far this month.</p></div>
     <div class="card nudge"><div class="tag">⚡ Subscription radar</div>
-      <p><b>Spotify</b> quietly went up to ${num(11.99)}, and your <b>Audible</b> trial converts in 3 days. Worth a look in Insights.</p></div>
+      <p>You've <b>${SUBSCRIPTIONS.length} subscriptions</b> at ${num(SUBSCRIPTIONS.reduce((s,x)=>s+x.amount,0))}/mo. <b>Disney+</b> you've watched once since March, and <b>Spotify</b> crept up to ${num(11.99)}.</p></div>
 
     <div class="sec-title">This week's check-in</div>
     <div class="card week">
@@ -623,8 +663,8 @@ function renderHome(){
         <div class="wk-stat"><div class="k">Spent (7d)</div><div class="v">${fmt(wkSpend)}</div></div>
         <div class="wk-stat"><div class="k">Top category</div><div class="v" style="font-size:15px">${CATLABEL[topCat.c]}</div></div>
       </div>
-      <div class="wk-line"><span class="wk-ico" style="color:var(--careful)">↗</span><span>One to watch: <b>takeaways</b> were ${num(Engine.spend(4,'Takeaway'))} last month across ${Engine.count(4,'Takeaway')} orders. Two fewer a week banks ~${num(Engine.spend(4,'Takeaway')/Engine.count(4,'Takeaway')*2)}.</span></div>
-      <div class="wk-line"><span class="wk-ico" style="color:var(--accent)">★</span><span>A win: you're tracking under last month and haven't touched your buffer once. Keep it up.</span></div>
+      <div class="wk-line"><span class="wk-ico" style="color:var(--careful)">↗</span><span>One to watch: <b>nights out</b> ran to ${num(Engine.spend(4,'Nightlife'))} across ${Engine.nightsOut(4)} nights last month. One quieter weekend banks about ${num(Engine.avgPerNight(4))}.</span></div>
+      <div class="wk-line"><span class="wk-ico" style="color:var(--accent)">★</span><span>A win: this week's quieter, ${fmt(wkSpend)} so far. Keep the midweek ones cheap and future-you at payday says thanks.</span></div>
     </div>`;
 }
 function sparkSVG(proj){
@@ -701,6 +741,8 @@ function renderInsights(){
     <div class="card" style="padding:6px 16px">${catHtml}</div>
 
     <div class="sec-title">Habits I've spotted</div>
+    <div class="card habit"><div class="hi">🍻</div><div><div class="ht">The nights out</div>
+      <div class="hd"><b>${Engine.nightsOut(m)} nights out</b> in ${monthName(m)}, averaging ${num(Engine.avgPerNight(m))} each. Nightlife came to ${num(Engine.spend(m,'Nightlife'))}, and all-in going out (drinks, gigs, late food, taxis) was <b>${num(Engine.goingOut(m))}</b> — about ${Engine.goingOutPct(m)}% of your income. Fridays and Saturdays do the damage.</div></div></div>
     <div class="card habit"><div class="hi">☕</div><div><div class="ht">The daily coffee</div>
       <div class="hd">You bought coffee <b>${cc} times</b> in ${monthName(m)}, averaging ${num(ca)} a cup. That's ${num(cm)} that month, about <b>${fmt(cm*12)}</b> a year. Cutting to twice a week saves roughly ${num(Engine.coffeeSave())}/mo. Not saying stop — just noticed.</div></div></div>
     <div class="card habit"><div class="hi">🍜</div><div><div class="ht">Takeaway Thursdays</div>
@@ -725,11 +767,11 @@ function setMonth(m){ insMonth=m; renderInsights(); requestAnimationFrame(()=>co
    SCREEN: GOALS + what-if
    ===================================================================== */
 const LEVERS=[
-  {id:'gym',label:'Cancel FlyeFit Gym',sub:'3 visits in May',save:39.99},
-  {id:'netflix',label:'Cancel Netflix',sub:'Standard plan',save:17.99},
-  {id:'spotify',label:'Cancel Spotify',sub:'Just went up',save:11.99},
-  {id:'audible',label:'Cancel Audible trial',sub:'Converts in 3 days',save:9.99},
-  {id:'takeaway',label:'Halve takeaways',sub:'2 fewer a week',save:round2(Engine.spend(4,'Takeaway')/2)},
+  {id:'nights',label:'Halve your nights out',sub:Engine.nightsOut(4)+' nights last month',save:round2(Engine.spend(4,'Nightlife')/2)},
+  {id:'taxis',label:'Cut the taxis in half',sub:'night bus / walk it',save:round2(Engine.spend(4,'Transport')/2)},
+  {id:'takeaway',label:'Halve late-night food',sub:Engine.count(4,'Takeaway')+' orders last month',save:round2(Engine.spend(4,'Takeaway')/2)},
+  {id:'streaming',label:'Drop Disney+ & Prime',sub:'barely used',save:18.98},
+  {id:'gym',label:'Cancel FlyeFit Gym',sub:'are you going?',save:45},
   {id:'coffee',label:'Coffee twice a week',sub:'instead of daily',save:Engine.coffeeSave()},
 ];
 let leverState={}; let loanCost=0;
@@ -798,7 +840,8 @@ function recalcWhatIf(){
     note=`These changes ${dir} <b>${fmt(Math.abs(delta))}/mo</b>. Over 3 months that's ${fmt(Math.abs(threeMo-Engine.monthlySurplus()*3))} difference. `;
     // Lisbon goal ETA effect
     const lis=GOALS[0], rem=lis.target-lis.saved;
-    if(newSurplus>0){ const mo=Math.ceil(rem/newSurplus); note+=`At this rate you'd fully fund <b>Lisbon</b> in about ${mo} months.`; }
+    if(newSurplus>0){ const mo=Math.ceil(rem/newSurplus); note+=`At this rate you'd fully fund <b>${lis.name}</b> in about ${mo} months.`; }
+    else { note+=`You'd still be spending more than you earn, so the goals stay parked. Try a couple more switches.`; }
   }
   document.getElementById('whatifOut').innerHTML=`
     <div class="wo-big">${fmt(newSurplus)}<span style="font-size:14px;color:var(--muted);font-weight:700">/mo</span></div>
@@ -864,6 +907,8 @@ HARD RULE: only state numbers that appear in the FACTS below. Never calculate or
     L.push(`May spend by category: ${DISC.map(c=>CATLABEL[c]+' EUR '+e.spend(4,c)).join(', ')}.`);
     L.push(`Coffee: ${e.count(4,'Coffee')} times in May, avg EUR ${round2(e.spend(4,'Coffee')/e.count(4,'Coffee'))}, EUR ${e.spend(4,'Coffee')}/mo; cutting to twice a week saves about EUR ${e.coffeeSave()}/mo.`);
     L.push(`Takeaways: ${e.count(4,'Takeaway')} orders in May, EUR ${e.spend(4,'Takeaway')} total.`);
+    L.push(`Nightlife: ${e.nightsOut(4)} nights out in May, EUR ${e.spend(4,'Nightlife')} total (avg EUR ${e.avgPerNight(4)} a night). Concerts EUR ${e.spend(4,'Concerts')}. Travel EUR ${e.spend(4,'Travel')}.`);
+    L.push(`Total going out in May (nightlife + concerts + late-night food + taxis): EUR ${e.goingOut(4)}, which is ${e.goingOutPct(4)}% of the EUR ${INCOME.amount} monthly income.`);
     L.push(`Subscriptions (EUR ${SUBSCRIPTIONS.reduce((s,x)=>s+x.amount,0).toFixed(2)}/mo): ${SUBSCRIPTIONS.map(s=>s.name+' EUR '+s.amount+(s.flag?' ['+s.flag+']':'')).join('; ')}.`);
     L.push(`Bills before payday: ${e.billsBeforePayday().map(b=>b.merchant+' EUR '+b.amount+' on '+b.day+'th').join(', ')}.`);
     L.push(`Monthly breathing room after fixed costs and typical spending: EUR ${e.monthlySurplus()}.`);
@@ -948,6 +993,10 @@ function stsReply(){
 function categoryReply(cat,month){
   const v=Engine.spend(month,cat), c=Engine.count(month,cat);
   if(!v) return [{type:'text',html:`Nothing in <b>${CATLABEL[cat].toLowerCase()}</b> for ${monthName(month)} that I can see.`}];
+  if(cat==='Nightlife'){
+    return [{type:'text',html:`In ${monthName(month)} you spent ${num(v)} on <b>nightlife</b> across <b>${Engine.nightsOut(month)} nights out</b>, about ${num(Engine.avgPerNight(month))} a night. Add gigs, late food and taxis and going out came to ${num(Engine.goingOut(month))} — ${Engine.goingOutPct(month)}% of your income.`},
+      {type:'followups',items:['Have I partied too much?','What if I halved my nights out?']}];
+  }
   const avg=round2(v/c);
   const extra = cat==='Coffee' ? ` That's about ${fmt(v*12)} a year if every month looks like this.` :
                 cat==='Takeaway' ? ` Most of them land Thursday to Saturday.` : '';
@@ -966,8 +1015,18 @@ function billsReply(){
 }
 function subsReply(){
   const total=SUBSCRIPTIONS.reduce((s,x)=>s+x.amount,0);
-  return [{type:'text',html:`You've <b>${SUBSCRIPTIONS.length} subscriptions</b> running, ${num(total)}/mo all in. Two flags: <b>Spotify</b> went up to ${num(11.99)}, and your <b>Audible</b> trial converts in 3 days. Your gym's ${num(39.99)} for 3 visits last month too.`},
-    {type:'followups',items:['What if I cancel the gym and Audible?','Where can I save?']}];
+  return [{type:'text',html:`You've <b>${SUBSCRIPTIONS.length} subscriptions</b> running, ${num(total)}/mo all in. Two flags: <b>Spotify</b> crept up to ${num(11.99)}, and <b>Disney+</b> you've watched once since March. Dropping the ones you don't use frees up an easy ${num(18.98)}/mo.`},
+    {type:'followups',items:['What if I cancel Disney+ and Prime?','Where can I save?']}];
+}
+function partyReply(month){
+  const m=month, n=Engine.nightsOut(m), nl=Engine.spend(m,'Nightlife'), gigs=Engine.spend(m,'Concerts'),
+        go=Engine.goingOut(m), pct=Engine.goingOutPct(m), avg=Engine.avgPerNight(m);
+  let open,tail;
+  if(pct>=45){ open=`Hand on heart? A fair bit. `; tail=`That's a big slice of your ${num(INCOME.amount)} gone on having the craic. No shame in it, but it's exactly why you're tight before payday. Two quieter weekends would change the whole month.`; }
+  else if(pct>=28){ open=`You're right at the edge. `; tail=`Not in trouble, but worth keeping half an eye on it.`; }
+  else { open=`Nah, you're grand. `; tail=`Plenty of room for it, enjoy yourself.`; }
+  return [{type:'text',html:`${open}In ${monthName(m)} you had <b>${n} nights out</b> at about ${num(avg)} a go, ${num(nl)} on nightlife and ${num(gigs)} on gigs. All in, going out (drinks, gigs, late food, taxis) cost around ${num(go)} — that's <b>${pct}%</b> of what you earn. ${tail}`},
+    {type:'followups',items:['What if I halved my nights out?','Where can I save?','Show me my nightlife spend']}];
 }
 function whatIfReply(msg){
   const named=SUBSCRIPTIONS.filter(s=>msg.toLowerCase().includes(s.name.toLowerCase().split(' ')[0]));
@@ -979,15 +1038,16 @@ function whatIfReply(msg){
   return [{type:'text',html:`Tell me which to cut (e.g. "what if I cancel Netflix and the gym") and I'll show the 3-month impact. Or open the <b>Goals</b> tab for the full what-if simulator with a loan slider.`}];
 }
 function saveReply(){
-  return [{type:'text',html:`Three easy ones, biggest first:<br><br>• <b>Takeaways</b> — two fewer a week, ~${num(Engine.spend(4,'Takeaway')/Engine.count(4,'Takeaway')*2)}/mo<br>• <b>Gym</b> — ${num(39.99)} for 3 visits in May, pay-as-you-go might beat it<br>• <b>Coffee</b> — twice a week saves ~${num(Engine.coffeeSave())}/mo<br><br>Do all three and you're up about ${num(Engine.spend(4,'Takeaway')/Engine.count(4,'Takeaway')*2+39.99+Engine.coffeeSave())}/mo. The Goals tab simulates it live.`}];
+  const nights=round2(Engine.spend(4,'Nightlife')/2), taxis=round2(Engine.spend(4,'Transport')/2);
+  return [{type:'text',html:`Biggest levers first, given the month you've had:<br><br>• <b>Nights out</b> — one fewer big weekend saves about ${num(nights)}/mo<br>• <b>Taxis</b> — half of them to the night bus, ~${num(taxis)}/mo<br>• <b>Disney+ & Prime</b> — barely used, ${num(18.98)}/mo<br><br>That trio alone is about ${num(nights+taxis+18.98)}/mo back in your pocket. The Goals tab simulates it live with a slider.`}];
 }
 function velocityReply(){
   const v=Engine.velocity();
   return [{type:'text',html:`So far in June you've spent ${num(v.jun)} on day-to-day stuff vs ${num(v.may)} by this point in May — about <b>${Math.abs(v.pct)}% ${v.pct<0?'slower':'faster'}</b>. ${v.pct<0?'Nicely under, keep it up.':'Worth easing off a touch.'}`}];
 }
 function fallbackReply(){
-  return [{type:'text',html:`I can help with stuff like:<br><br>• "Can I afford €120 on Saturday?"<br>• "How much did I spend on takeaways in May?"<br>• "What's safe to spend?"<br>• "What if I cancel the gym?"<br><br>Ask away, or tap a chip below.`},
-    {type:'followups',items:["What's safe to spend?",'Coffee spend','My subscriptions']}];
+  return [{type:'text',html:`I can help with stuff like:<br><br>• "Have I partied too much?"<br>• "How much on nights out in May?"<br>• "Can I afford €60 on Saturday?"<br>• "What if I halved my nights out?"<br><br>Ask away, or tap a chip below.`},
+    {type:'followups',items:['Have I partied too much?',"What's safe to spend?",'My subscriptions']}];
 }
 function route(msg){
   const m=msg.toLowerCase();
@@ -1001,14 +1061,18 @@ function route(msg){
     const d=dayRef?+dayRef:( /saturday|sat\b/.test(m)?20 : /sunday/.test(m)?21 : null);
     return affordReply(amount, d && d>18 && d<29 ? d : null);
   }
+  if(/partied too much|party too much|too many nights|out too much|too much (going )?out|been out too|drink too much|overdo|big nights|am i out too/.test(m)) return partyReply(monthRef);
   if(/faster|slower|pace|compared|compare|vs last|this month/.test(m)) return velocityReply();
+  if(/nightlife|nights out|\bpub\b|pubs|\bclub\b|clubbing|coppers|drinks|going out/.test(m)) return categoryReply('Nightlife',monthRef);
+  if(/concert|\bgig\b|gigs|festival|3arena|whelan|vicar street|\btickets?\b/.test(m)) return categoryReply('Concerts',monthRef);
+  if(/travel|flight|flights|ryanair|aer lingus|airbnb|holiday|\btrip\b/.test(m)) return categoryReply('Travel',monthRef);
   if(/coffee|latte|flat white|cappuccino/.test(m)) return coffeeReply(monthRef);
   if(/takeaway|takeout|deliveroo|just eat|uber eats|food deliver/.test(m)) return categoryReply('Takeaway',monthRef);
   if(/grocer|tesco|lidl|dunnes|aldi|supervalu|food shop/.test(m)) return categoryReply('Groceries',monthRef);
-  if(/transport|leap|taxi|free now|bus|luas/.test(m)) return categoryReply('Transport',monthRef);
+  if(/transport|leap|taxi|free now|\bbus\b|luas/.test(m)) return categoryReply('Transport',monthRef);
   if(/eating out|restaurant|lunch|dinner|brunch/.test(m)) return categoryReply('EatingOut',monthRef);
-  if(/shopping|clothes|penneys|zara|amazon/.test(m)) return categoryReply('Shopping',monthRef);
-  if(/subscription|subs\b|netflix|spotify|audible|recurring/.test(m)) return subsReply();
+  if(/shopping|clothes|penneys|zara|brown thomas/.test(m)) return categoryReply('Shopping',monthRef);
+  if(/subscription|subs\b|netflix|spotify|disney|amazon prime|recurring/.test(m)) return subsReply();
   if(/bill|direct debit|due|upcoming|owe/.test(m)) return billsReply();
   if(/save|saving|cut back|spend less/.test(m)) return saveReply();
   if(/safe to spend|how much.*(left|free|have|spare)|balance|broke|how am i|am i ok|am i okay/.test(m)) return stsReply();
@@ -1019,8 +1083,8 @@ function route(msg){
 input.addEventListener('input',()=>{sendBtn.disabled=!input.value.trim();});
 input.addEventListener('keydown',e=>{if(e.key==='Enter')handleSend();});
 sendBtn.addEventListener('click',()=>handleSend()); sendBtn.disabled=true;
-const CHIPS=[['Afford €90 Sat?','can i afford €90 on saturday?'],['Coffee spend','how much do i spend on coffee?'],
-  ["Safe to spend?","what's safe to spend right now?"],['Takeaways in May','how much on takeaways in may?'],
+const CHIPS=[['Have I partied too much?','have i partied too much?'],['Nightlife spend','how much on nights out in may?'],
+  ['Afford €60 Sat?','can i afford €60 on saturday?'],["Safe to spend?","what's safe to spend right now?"],
   ['My subscriptions','show me my subscriptions'],['Where can I save?','where can i save?']];
 const chipsEl=document.getElementById('chips');
 CHIPS.forEach(([l,q])=>{const b=document.createElement('button');b.className='chip';b.textContent=l;b.onclick=()=>handleSend(q);chipsEl.appendChild(b);});
@@ -1031,9 +1095,9 @@ function bootChat(){
   AI.check();
   const proj=Engine.projection(),vel=Engine.velocity();
   [
-    {d:200,parts:[{type:'text',html:`Morning Sam 👋 Had a look at your accounts overnight.`}]},
-    {d:1400,nudge:true,parts:[{type:'text',html:`Your ${num(89)} <b>Three</b> bill goes out tomorrow — already set aside, so your ${num(Engine.safeToSpend())} safe-to-spend accounts for it.`}]},
-    {d:2900,parts:[{type:'text',html:`You're tracking about ${Math.abs(vel.pct)}% under last month, nice. Ask me anything — "can I afford X", a category, what-ifs. I've the real numbers.`},{type:'followups',items:["What's safe to spend?",'Afford €90 Sat?']}]},
+    {d:200,parts:[{type:'text',html:`Morning Sam 👋 Had a look at the accounts after the weekend.`}]},
+    {d:1400,nudge:true,parts:[{type:'text',html:`Your ${num(45)} <b>Three</b> bill goes out tomorrow, already set aside, so your ${num(Engine.safeToSpend())} safe-to-spend covers it.`}]},
+    {d:2900,parts:[{type:'text',html:`Big month last month, going out came to about ${num(Engine.goingOut(4))} (${Engine.goingOutPct(4)}% of your income). Ask me anything: "have I partied too much?", a category, what-ifs.`},{type:'followups',items:['Have I partied too much?','Afford €60 Sat?']}]},
   ].forEach(s=>setTimeout(()=>addTilly(s.parts,s.nudge),s.d));
 }
 
@@ -1112,9 +1176,9 @@ function finishOnb(){ document.getElementById('onb').classList.add('hide'); }
    DEMO SCENARIOS (prototype only) — swap the "available now" snapshot
    ===================================================================== */
 const SCENARIOS={
-  default:{label:'Typical', R:286.40, B:430.00},
-  tight:{label:'Tight week', R:150.00, B:330.00},
-  flush:{label:'Flush', R:540.00, B:1980.00},
+  default:{label:'Typical', R:200.40, B:450.00},
+  tight:{label:'Tight week', R:150.00, B:380.00},
+  flush:{label:'Just paid', R:700.00, B:2600.00},
 };
 let scenario='default';
 function applyScenario(k){
@@ -1212,8 +1276,10 @@ function detectCategory(m){
   if(/grocer|tesco|lidl|dunnes|aldi|supervalu/.test(m))return 'Groceries';
   if(/transport|leap|taxi|free now|\bbus\b|luas/.test(m))return 'Transport';
   if(/eating out|restaurant|lunch|dinner|brunch/.test(m))return 'EatingOut';
-  if(/shopping|clothes|penneys|zara|amazon/.test(m))return 'Shopping';
-  if(/entertainment|cinema|\bgig\b|concert/.test(m))return 'Entertainment';
+  if(/shopping|clothes|penneys|zara|brown thomas/.test(m))return 'Shopping';
+  if(/nightlife|nights out|pub|club|clubbing|coppers|drinks|going out/.test(m))return 'Nightlife';
+  if(/concert|gig|festival|3arena|whelan|vicar/.test(m))return 'Concerts';
+  if(/travel|flight|ryanair|aer lingus|airbnb|holiday|trip/.test(m))return 'Travel';
   return null;
 }
 const ACKS=["Anytime 🙂","No bother. Shout if you want to check anything else.","Sound, I'm here if you need me.","👍 Want me to keep an eye on anything for you?"];
@@ -1249,7 +1315,7 @@ function smartRoute(raw){
 function boot(){
   document.getElementById('stsPillVal').textContent=fmt(Engine.safeToSpend());
   document.getElementById('onbSts').textContent=fmt(Engine.safeToSpend())+' safe to spend';
-  document.getElementById('onbCoffee').textContent=Engine.count(4,'Coffee')+' coffees last month — '+fmt(Engine.spend(4,'Coffee'));
+  document.getElementById('onbCoffee').textContent=Engine.nightsOut(4)+' nights out last month, '+fmt(Engine.goingOut(4))+' going out';
   renderHome();
   requestAnimationFrame(()=>countUpActive('home'));
 }
