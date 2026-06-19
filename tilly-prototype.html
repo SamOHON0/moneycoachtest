@@ -217,6 +217,56 @@
   .msg-col{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:100%}
   .cust-preview{display:flex;justify-content:center;background:var(--bg);border-radius:16px;padding:8px;margin-bottom:4px}
   .cust-preview svg{width:104px}
+  /* greeting hero */
+  .greet-hero{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+  .greet-char{width:78px;height:84px;overflow:hidden;flex:none;filter:drop-shadow(0 4px 7px rgba(0,0,0,.16))}
+  .greet-char svg{width:78px;display:block}
+  .greet-char.wave{animation:wavebuddy 1.1s ease 1}
+  .greet-bubble{flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;border-bottom-left-radius:5px;padding:11px 13px;box-shadow:0 10px 26px -16px rgba(12,31,23,.4)}
+  .greet-hi{font-weight:800;font-size:16.5px;letter-spacing:-.01em}
+  .greet-say{font-size:13px;color:var(--ink-soft);margin-top:3px;line-height:1.45}
+  .greet-say .num{color:var(--accent-deep);font-weight:800}
+  @keyframes wavebuddy{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+  /* game strip */
+  .game-strip{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:9px 11px;margin-bottom:12px}
+  .lvl{background:linear-gradient(145deg,#1fcf8a,#0e6b48);color:#fff;font-weight:800;font-size:12px;padding:6px 9px;border-radius:10px;flex:none}
+  .xpwrap{flex:1;min-width:0}
+  .xptop{display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
+  .xptop .next{color:var(--accent-deep)}
+  .xpbar{height:8px;border-radius:999px;background:#eef0ec;overflow:hidden}
+  .xpbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ffd27a,#15b577);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .gpill{font-size:12.5px;font-weight:800;background:#f4f6f3;border-radius:999px;padding:6px 10px;flex:none}
+  /* check-in */
+  .checkin{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .ci-t{font-weight:800;font-size:14.5px}.ci-s{font-size:12px;color:var(--muted);margin-top:2px}
+  .ci-btn{border:0;background:var(--accent);color:#fff;font-family:inherit;font-weight:800;font-size:13px;padding:11px 14px;border-radius:12px;cursor:pointer;flex:none;transition:transform .12s}
+  .ci-btn:active{transform:scale(.95)} .ci-btn.done{background:#dfe4df;color:var(--muted)}
+  /* quests */
+  .quest{display:flex;align-items:center;gap:11px;padding:11px 0}
+  .quest+.quest{border-top:1px solid var(--line)}
+  .q-ic{width:38px;height:38px;border-radius:11px;background:var(--accent-tint);display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+  .q-mid{flex:1;min-width:0}.q-t{font-weight:700;font-size:13.5px}
+  .q-bar{height:7px;border-radius:999px;background:#eef0ec;overflow:hidden;margin:6px 0 5px}
+  .q-bar i{display:block;height:100%;border-radius:999px;background:var(--accent)}
+  .q-sub{font-size:11px;color:var(--muted);font-weight:600}
+  .q-claim{border:0;font-family:inherit;font-weight:800;font-size:12px;padding:8px 12px;border-radius:10px;cursor:pointer;flex:none;background:#eef0ec;color:var(--muted)}
+  .q-claim.ready{background:var(--accent);color:#fff}
+  .q-claim.claimed{background:var(--accent-tint);color:var(--accent-deep)}
+  /* badges */
+  .badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .badge2{text-align:center;opacity:.4;filter:grayscale(1)}
+  .badge2.on{opacity:1;filter:none}
+  .b-ic{width:46px;height:46px;border-radius:50%;background:#f4f6f3;display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 5px}
+  .badge2.on .b-ic{background:var(--accent-tint)}
+  .b-l{font-size:10.5px;font-weight:700;color:var(--ink-soft)}
+  /* customisation coins + locks */
+  .cust-coins{font-size:13px;font-weight:800;color:var(--accent-deep);background:var(--accent-tint);display:inline-block;padding:5px 11px;border-radius:999px;margin-bottom:6px}
+  .style-opt .sl{flex:1}
+  .style-opt.locked{opacity:.75}
+  .s-cost{font-size:11.5px;font-weight:800;color:#9a5e10;background:var(--careful-tint);padding:4px 8px;border-radius:999px;flex:none}
+  /* confetti */
+  .confetti{position:absolute;top:26%;width:9px;height:13px;border-radius:2px;z-index:50;pointer-events:none;animation:confall 1.4s ease-in forwards;opacity:.95}
+  @keyframes confall{0%{transform:translate(0,0) rotate(0deg);opacity:1}100%{transform:translate(var(--x),430px) rotate(var(--r));opacity:0}}
   /* demo switch */
   .demo-switch{display:flex;align-items:center;gap:9px;margin-bottom:14px}
   .demo-lbl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);flex:none}
@@ -672,18 +722,20 @@ function renderHome(){
   document.getElementById('scr-home').innerHTML=`
     <div class="demo-switch"><span class="demo-lbl">Demo data</span>
       <div class="seg seg-sm">${Object.entries(SCENARIOS).map(([k,v])=>`<button class="${scenario===k?'on':''}" onclick="applyScenario('${k}')">${v.label}</button>`).join('')}</div></div>
-    <div class="greet">Morning, Sam 👋<small>Here's where you stand today, Thursday ${ord(18)} June.</small></div>
+    <div class="greet-hero">
+      <div class="greet-char" id="greetChar">${personSVG(false)}</div>
+      <div class="greet-bubble">
+        <div class="greet-hi">${greetOpen()}</div>
+        <div class="greet-say" id="greetSay">${greetingLine()}</div>
+      </div>
+    </div>
+
+    ${gameStripHTML()}
 
     <button class="sts-hero" onclick="openSheet()">
-      <div class="hero-row">
-        <div class="hero-left">
-          <div class="top"><span class="cap">Safe to spend</span></div>
-          <div class="big">${fmt(sts)}</div>
-          <div class="sub">before payday · ${Engine.daysToPayday()} days · dips to ${fmt(dip.bal)} on the ${ord(dip.day)}</div>
-          <div class="hero-say" id="heroSay">${buddyLine(sts)}</div>
-        </div>
-        <div class="hero-char">${personSVG(false)}</div>
-      </div>
+      <div class="top"><span class="cap">Safe to spend</span><span class="chev">Breakdown ›</span></div>
+      <div class="big">${fmt(sts)}</div>
+      <div class="sub">before payday · ${Engine.daysToPayday()} days · dips to ${fmt(dip.bal)} on the ${ord(dip.day)}</div>
       <div class="spark">${sparkSVG(proj)}</div>
     </button>
 
@@ -700,6 +752,11 @@ function renderHome(){
       ${ACCOUNTS.map(a=>`<div class="acct-chip"><div class="lg" style="background:${a.color}">${a.short}</div>
         <div class="nm">${a.name}</div><div class="bl">${fmt(a.available)}</div></div>`).join('')}
     </div>
+
+    <div class="sec-title">Your progress</div>
+    ${checkInHTML()}
+    ${questsHTML()}
+    ${badgesHTML()}
 
     <div class="sec-title">Tilly's noticing</div>
     <div class="card nudge"><div class="tag">⚡ Heads up</div>
@@ -1259,7 +1316,7 @@ function linkBank(id){ const el=document.getElementById(id); el.classList.add('l
     const b=document.getElementById('onb2btn'); b.disabled=false; b.textContent='Continue';
   }}
 function finishOnb(){ document.getElementById('onb').classList.add('hide');
-  setTimeout(()=>{ Mascot.show(true); Mascot.say(`Hi, I'm <b>${esc(PERSONA.name)}</b> 👋 You've ${num(Engine.safeToSpend())} safe to spend today. Tap me anytime.`,'happy',6000); }, 480);
+  setTimeout(()=>greetHello(), 480);
 }
 
 /* =====================================================================
@@ -1420,12 +1477,12 @@ const STYLES=[
    open:['Dude, ','Yo, ','Alright so '],end:' Stay stoked 🤙',swaps:[[/\bHonestly\b/g,'Real talk']],hat:'none',hair:'surf',fem:false},
   {id:'frat',label:'Frat guy',emoji:'🧢',desc:'Hyped, bro',
    voice:'A hyped American frat bro. Uses "bro", "dude", "LET\'S GO", "send it". High energy, never wrong on the numbers.',
-   open:['Bro, ','Ayy bro, ','Okay listen bro, '],end:" LET'S GO 🙌",swaps:[],hat:'cap',hair:'none',fem:false},
+   open:['Bro, ','Ayy bro, ','Okay listen bro, '],end:" LET'S GO 🙌",swaps:[],hat:'cap',hair:'none',fem:false,cost:120},
   {id:'bestie',label:'Bestie',emoji:'💁‍♀️',desc:'Hype best friend',
    voice:'A warm, hype best friend. Uses "babe", "hun", "obsessed", "we love to see it". Supportive and encouraging, never judgy.',
-   open:['Babe, ','Okay hun, ','Right babe, '],end:' You got this 💖',swaps:[],hat:'none',hair:'long',fem:true},
+   open:['Babe, ','Okay hun, ','Right babe, '],end:' You got this 💖',swaps:[],hat:'none',hair:'long',fem:true,cost:200},
 ];
-let PERSONA={name:'Tilly',accent:'#0e6b48',style:'chill',skin:'#e8b98f',catch:''};
+let PERSONA={name:'Tilly',user:'Sam',accent:'#0e6b48',style:'chill',skin:'#e8b98f',catch:''};
 
 function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=(n>>16)+amt,g=((n>>8)&255)+amt,b=(n&255)+amt; r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b)); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
 function lighten(hex,amt){ return shade(hex,amt); }
@@ -1492,19 +1549,27 @@ function applyPersona(){
   savePersona();
 }
 function refreshChar(){ applyPersona(); const cur=document.querySelector('nav button.on'); if(cur&&cur.dataset.scr==='home')renderHome(); }
-function setStyle(id){ PERSONA.style=id; refreshChar(); renderCust(); }
+function setStyle(id){
+  if(!styleUnlocked(id)){ const s=STYLES.find(x=>x.id===id);
+    if((GAME.coins||0)>=s.cost){ GAME.coins-=s.cost; (GAME.unlocks=GAME.unlocks||[]).push(id); saveGame(); confetti(); if(typeof Mascot!=='undefined')Mascot.say(`Unlocked the <b>${s.label}</b> look 🎉`,'celebrate'); }
+    else { renderCust(); return; } }
+  PERSONA.style=id; refreshChar(); renderCust();
+}
 function setAccent(c){ PERSONA.accent=c; refreshChar(); renderCust(); }
 function setSkin(c){ PERSONA.skin=c; refreshChar(); renderCust(); }
 function openCust(){ renderCust(); document.getElementById('custPanel').classList.add('open'); }
 function closeCust(){ document.getElementById('custPanel').classList.remove('open'); }
 function renderCust(){
   document.getElementById('custBody').innerHTML=`
-    <h3>Meet your coach</h3>
+    <h3>Your money coach</h3>
+    <div class="cust-coins">🪙 ${GAME.coins} coins · Level ${GAME.level}</div>
     <div class="cust-preview">${personSVG(false)}</div>
-    <label class="cust-lbl">Name</label>
+    <label class="cust-lbl">Your name</label>
+    <input class="cust-input" value="${esc(PERSONA.user||'')}" oninput="PERSONA.user=this.value;savePersona();if(document.querySelector('nav button.on').dataset.scr==='home')renderHome()" />
+    <label class="cust-lbl">Coach's name</label>
     <input class="cust-input" value="${esc(PERSONA.name)}" oninput="PERSONA.name=this.value;applyPersona()" />
     <label class="cust-lbl">Personality</label>
-    <div class="style-list">${STYLES.map(s=>`<button class="style-opt ${PERSONA.style===s.id?'on':''}" onclick="setStyle('${s.id}')"><span class="se">${s.emoji}</span><span><b>${s.label}</b><small>${s.desc}</small></span></button>`).join('')}</div>
+    <div class="style-list">${STYLES.map(s=>{ const lk=!styleUnlocked(s.id); return `<button class="style-opt ${PERSONA.style===s.id?'on':''} ${lk?'locked':''}" onclick="setStyle('${s.id}')"><span class="se">${s.emoji}</span><span class="sl"><b>${s.label}</b><small>${s.desc}</small></span>${lk?`<span class="s-cost">🔒 🪙${s.cost}</span>`:''}</button>`; }).join('')}</div>
     <label class="cust-lbl">Hoodie colour</label>
     <div class="acc-row">${ACCENTS.map(c=>`<button class="acc-sw ${PERSONA.accent===c?'on':''}" style="background:${c}" onclick="setAccent('${c}')"></button>`).join('')}</div>
     <label class="cust-lbl">Skin tone</label>
@@ -1520,24 +1585,82 @@ function renderCust(){
    ===================================================================== */
 const BUDDYMOUTH={happy:'M44,62 Q50,68 56,62',neutral:'M44,63 H56',worried:'M44,65 Q50,59 56,65',celebrate:'M43,61 Q50,71 57,61 Q50,65 43,61'};
 function buddyLine(sts){ const base= sts<60?`A bit tight, ${num(sts)} safe to spend`:`${num(sts)} to play with before payday`; return styleize([{type:'text',html:base}])[0].html; }
+function greetOpen(){ const h=new Date().getHours(); const tod=h<5?'Evening':h<12?'Morning':h<18?'Afternoon':'Evening'; return `${tod}, ${esc(PERSONA.user||'there')} 👋`; }
+function greetingCore(){
+  const sts=Engine.safeToSpend(), proj=Engine.projection();
+  return sts<60
+    ? `You're a bit tight today, only ${num(sts)} truly free before payday. Keep an eye on the ${ord(proj.min.day)}th and you're grand.`
+    : `You've ${num(sts)} to play with before payday. I'm keeping an eye on things, just shout if you want to check anything.`;
+}
+function greetingLine(){ return styleize([{type:'text',html:greetingCore()}])[0].html; }
+function greetHello(){
+  const coach=esc(PERSONA.name||'your coach');
+  Mascot.say(styleize([{type:'text',html:`Hey ${esc(PERSONA.user||'there')}, I'm ${coach}, your money coach. ${greetingCore()}`}])[0].html, Engine.safeToSpend()<60?'worried':'happy');
+  waveBuddy();
+}
+function waveBuddy(){ const c=document.getElementById('greetChar'); if(c){ c.classList.remove('wave'); void c.offsetWidth; c.classList.add('wave'); } }
 const Mascot={
   init(){},
   recolor(){},
   mood(m){ const el=document.getElementById('buddyMouth'); if(el)el.setAttribute('d',BUDDYMOUTH[m]||BUDDYMOUTH.happy); },
-  say(html,m){ if(m)this.mood(m); const el=document.getElementById('heroSay'); if(el)el.innerHTML=html; },
+  say(html,m){ if(m)this.mood(m); const el=document.getElementById('greetSay'); if(el)el.innerHTML=html; },
   context(scr){ if(scr==='home') this.mood(Engine.safeToSpend()<60?'worried':'happy'); },
   tap(){ const cur=document.querySelector('nav button.on').dataset.scr; if(cur!=='chat') go('chat'); },
   show(){}
 };
 
+/* =====================================================================
+   GAME LAYER — XP, levels, coins, streaks, quests, badges.
+   Rewards are tied to real money wins, so the game actually helps.
+   ===================================================================== */
+let GAME={ level:4, xp:240, xpMax:400, coins:320, streak:6, lastCheck:'', claimed:[], unlocks:['chill','surfer'], badges:{firstweek:1,subslayer:1,weekend:1} };
+function saveGame(){ try{ localStorage.setItem('tilly_game',JSON.stringify(GAME)); }catch(e){} }
+function loadGame(){ try{ const s=localStorage.getItem('tilly_game'); if(s)GAME=Object.assign(GAME,JSON.parse(s)); }catch(e){} }
+const QUESTS=[
+  {id:'underline',icon:'🎯',title:'Stay under your safe line 3 days',done:3,goal:3,xp:80,coins:50},
+  {id:'takeaway',icon:'🍜',title:'Skip 2 takeaways this week',done:1,goal:2,xp:60,coins:40},
+  {id:'cook',icon:'🍳',title:'Cook at home twice',done:1,goal:2,xp:50,coins:30},
+];
+const BADGES=[
+  {id:'firstweek',icon:'🌱',label:'First week'},{id:'subslayer',icon:'🗡️',label:'Sub slayer'},
+  {id:'weekend',icon:'🍻',label:'Weekender'},{id:'nospend',icon:'🛡️',label:'No-spend day'},
+  {id:'goalhit',icon:'🏆',label:'Goal smashed'},{id:'streak30',icon:'🔥',label:'30-day streak'},
+];
+function todayKey(){ return new Date().toDateString(); }
+function gameStripHTML(){ const pct=Math.round(GAME.xp/GAME.xpMax*100);
+  return `<div class="game-strip">
+    <div class="lvl">LV ${GAME.level}</div>
+    <div class="xpwrap"><div class="xptop"><span>${GAME.xp}/${GAME.xpMax} XP</span><span class="next">Lv ${GAME.level+1}</span></div><div class="xpbar"><i style="width:${pct}%"></i></div></div>
+    <div class="gpill">🪙 ${GAME.coins}</div><div class="gpill">🔥 ${GAME.streak}</div>
+  </div>`; }
+function checkInHTML(){ const done=GAME.lastCheck===todayKey();
+  return `<div class="card checkin">
+    <div><div class="ci-t">Daily check-in</div><div class="ci-s">${done?`Done. ${GAME.streak}-day streak 🔥`:`Keep your ${GAME.streak}-day streak alive`}</div></div>
+    <button class="ci-btn ${done?'done':''}" ${done?'disabled':''} onclick="checkIn()">${done?'✓ Done':'Check in · +20 XP'}</button></div>`; }
+function questsHTML(){ return `<div class="sec-title">Today's quests</div><div class="card" style="padding:8px 16px">${QUESTS.map(q=>{
+  const claimed=GAME.claimed.includes(q.id), complete=q.done>=q.goal, pct=Math.min(100,Math.round(q.done/q.goal*100));
+  return `<div class="quest"><div class="q-ic">${q.icon}</div><div class="q-mid"><div class="q-t">${q.title}</div>
+    <div class="q-bar"><i style="width:${pct}%"></i></div><div class="q-sub">${q.done}/${q.goal} · reward 🪙${q.coins} +${q.xp} XP</div></div>
+    <button class="q-claim ${claimed?'claimed':complete?'ready':''}" ${complete&&!claimed?'':'disabled'} onclick="claimQuest('${q.id}')">${claimed?'✓':complete?'Claim':'…'}</button></div>`;
+}).join('')}</div>`; }
+function badgesHTML(){ return `<div class="sec-title">Badges</div><div class="card badges">${BADGES.map(b=>`<div class="badge2 ${GAME.badges[b.id]?'on':''}"><div class="b-ic">${b.icon}</div><div class="b-l">${b.label}</div></div>`).join('')}</div>`; }
+function rerenderHome(){ const cur=document.querySelector('nav button.on'); if(cur&&cur.dataset.scr==='home'){ renderHome(); requestAnimationFrame(()=>countUpActive('home')); } }
+function addXP(n){ GAME.xp+=n; while(GAME.xp>=GAME.xpMax){ GAME.xp-=GAME.xpMax; GAME.level++; GAME.xpMax=Math.round(GAME.xpMax*1.25); GAME.coins+=50; setTimeout(()=>{ confetti(); if(typeof Mascot!=='undefined')Mascot.say(`LEVEL UP, you're <b>Level ${GAME.level}</b> now 🎉`,'celebrate'); },320); } saveGame(); }
+function checkIn(){ if(GAME.lastCheck===todayKey())return; GAME.lastCheck=todayKey(); GAME.streak++; GAME.coins+=15; addXP(20); rerenderHome(); confetti(); if(typeof Mascot!=='undefined')Mascot.say(`Boom, <b>${GAME.streak}-day streak</b> 🔥 +🪙15`,'celebrate'); }
+function claimQuest(id){ const q=QUESTS.find(x=>x.id===id); if(!q||GAME.claimed.includes(id)||q.done<q.goal)return; GAME.claimed.push(id); GAME.coins+=q.coins; addXP(q.xp); rerenderHome(); confetti(); if(typeof Mascot!=='undefined')Mascot.say(`Quest smashed, +🪙${q.coins} and ${q.xp} XP 🎉`,'celebrate'); }
+function styleUnlocked(id){ const s=STYLES.find(x=>x.id===id); return !s||!s.cost||(GAME.unlocks||[]).includes(id); }
+function confetti(){ const host=document.querySelector('.phone'); if(!host)return; const cols=['#15b577','#e0962a','#e0524d','#2d6cdf','#d4317c','#7b2ff7','#ffd27a'];
+  for(let i=0;i<38;i++){ const d=document.createElement('div'); d.className='confetti'; d.style.left=(15+Math.random()*70)+'%'; d.style.background=cols[i%cols.length];
+    d.style.animationDelay=(Math.random()*0.18).toFixed(2)+'s'; d.style.setProperty('--x',(Math.random()*180-90).toFixed(0)+'px'); d.style.setProperty('--r',(Math.random()*620-310).toFixed(0)+'deg'); host.appendChild(d); setTimeout(()=>d.remove(),1500); } }
+
 function boot(){
-  loadPersona(); applyPersona();
+  loadPersona(); loadGame(); applyPersona();
   document.getElementById('stsPillVal').textContent=fmt(Engine.safeToSpend());
   document.getElementById('onbSts').textContent=fmt(Engine.safeToSpend())+' safe to spend';
   document.getElementById('onbCoffee').textContent=Engine.nightsOut(4)+' nights out last month, '+fmt(Engine.goingOut(4))+' going out';
   renderHome();
   requestAnimationFrame(()=>countUpActive('home'));
-  Mascot.init(); Mascot.context('home');
+  Mascot.init(); Mascot.context('home'); waveBuddy();
 }
 boot();
 </script>
