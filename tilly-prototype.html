@@ -201,6 +201,28 @@
   .style-opt small{font-size:12px;color:var(--muted)}
   .cust-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:14px;font-weight:600}
   .cust-try{width:100%;border:0;background:var(--accent-tint);color:var(--accent-deep);font-family:inherit;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;margin-top:8px}
+  /* mascot — corner character */
+  .mascot{position:absolute;right:12px;bottom:78px;width:90px;height:104px;z-index:9;cursor:pointer;display:none}
+  .mascot.show{display:block;animation:mascotIn .45s cubic-bezier(.2,.9,.3,1.3)}
+  .mascot-bob{position:absolute;bottom:0;right:0;width:90px;height:90px;animation:bob 3.2s ease-in-out infinite}
+  .mascot-char{width:90px;height:90px;overflow:visible;display:block}
+  .mascot-char.pop{animation:mpop .5s ease}
+  .m-shadow{fill:rgba(12,31,23,.16)}
+  .m-sprout{fill:#3fae7a}
+  .m-fill{fill:#0e6b48}
+  .m-arm{stroke:#0e6b48;stroke-width:4;fill:none;stroke-linecap:round}
+  .m-cheek{fill:#ff9bb0;opacity:0;transition:opacity .2s}
+  .mascot.celebrate .m-cheek{opacity:.85}
+  .eyes{transform-box:fill-box;transform-origin:center;transition:transform .09s}
+  .eyes.blink{transform:scaleY(.12)}
+  .mascot-bubble{position:absolute;right:8px;bottom:98px;max-width:188px;background:#fff;border:1px solid var(--line);
+    border-radius:14px;border-bottom-right-radius:4px;padding:9px 12px;font-size:12.5px;font-weight:600;color:var(--ink);
+    box-shadow:var(--shadow);opacity:0;transform:translateY(8px) scale(.92);transform-origin:bottom right;pointer-events:none;transition:.25s;line-height:1.4}
+  .mascot-bubble.show{opacity:1;transform:none}
+  .mascot-bubble .num{color:var(--accent-deep);font-weight:800}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes mpop{0%{transform:scale(1)}28%{transform:scale(1.13) rotate(-5deg)}60%{transform:scale(.96) rotate(3deg)}100%{transform:scale(1)}}
+  @keyframes mascotIn{from{opacity:0;transform:translateY(22px) scale(.7)}to{opacity:1;transform:none}}
   /* demo switch */
   .demo-switch{display:flex;align-items:center;gap:9px;margin-bottom:14px}
   .demo-lbl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);flex:none}
@@ -388,6 +410,27 @@
     <section class="screen" id="scr-insights"></section>
     <section class="screen" id="scr-goals"></section>
     <section class="screen" id="scr-activity"></section>
+  </div>
+
+  <div class="mascot" id="mascot" onclick="Mascot.tap()" role="button" aria-label="Your coach">
+    <div class="mascot-bubble" id="mascotBubble"></div>
+    <div class="mascot-bob"><svg class="mascot-char" id="mascotChar" viewBox="0 0 100 100">
+      <ellipse class="m-shadow" cx="50" cy="93" rx="22" ry="5"/>
+      <path class="m-sprout" d="M50,17 C50,8 57,4 63,6 C61,13 55,16 50,17 Z"/>
+      <rect class="m-fill" x="22" y="20" width="56" height="62" rx="26"/>
+      <ellipse cx="50" cy="52" rx="19" ry="23" fill="rgba(255,255,255,.10)"/>
+      <path class="m-arm m-armL" d="M23,60 q-9,1 -11,9"/>
+      <path class="m-arm m-armR" d="M77,60 q9,1 11,9"/>
+      <g class="eyes" id="mEyes">
+        <circle cx="40" cy="47" r="7.5" fill="#fff"/><circle cx="60" cy="47" r="7.5" fill="#fff"/>
+        <circle cx="41.5" cy="48" r="3.3" fill="#0c1f17"/><circle cx="61.5" cy="48" r="3.3" fill="#0c1f17"/>
+      </g>
+      <g id="brows" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
+        <path id="browL" d="M34,38 L46,38"/><path id="browR" d="M54,38 L66,38"/>
+      </g>
+      <circle class="m-cheek" cx="31" cy="60" r="4"/><circle class="m-cheek" cx="69" cy="60" r="4"/>
+      <path id="mMouth" d="M38,60 Q50,72 62,60" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg></div>
   </div>
 
   <div class="composer" id="composer">
@@ -713,8 +756,14 @@ function sparkSVG(proj){
 function homeAffordGo(){
   const v=parseFloat(document.getElementById('homeAfford').value);
   if(!v||v<=0){document.getElementById('homeVerdict').innerHTML='';return;}
-  document.getElementById('homeVerdict').innerHTML=verdictCard(Engine.affordability(v),true);
+  const r=Engine.affordability(v);
+  document.getElementById('homeVerdict').innerHTML=verdictCard(r,true);
   const i=document.querySelector('#homeVerdict .bar i'); if(i){const w=i.style.width;i.style.width='0';requestAnimationFrame(()=>i.style.width=w);}
+  if(typeof Mascot!=='undefined'){
+    if(r.verdict==='yes') Mascot.say('Go for it 🙌','celebrate');
+    else if(r.verdict==='careful') Mascot.say('Doable, but keep it tight','neutral');
+    else Mascot.say("I'd skip that one for now",'worried');
+  }
 }
 function verdictCard(r,withWhy){
   const col={yes:'var(--yes)',careful:'var(--careful)',no:'var(--no)'}[r.verdict];
@@ -1220,6 +1269,7 @@ function go(scr){
   if(scr==='goals') renderGoals();
   if(scr==='home') renderHome();
   if(scr==='activity') renderActivity();
+  if(typeof Mascot!=='undefined') Mascot.context(scr);
   requestAnimationFrame(()=>countUpActive(scr));
 }
 
@@ -1229,7 +1279,9 @@ function linkBank(id){ const el=document.getElementById(id); el.classList.add('l
   if(document.getElementById('bankR').classList.contains('linked')&&document.getElementById('bankB').classList.contains('linked')){
     const b=document.getElementById('onb2btn'); b.disabled=false; b.textContent='Continue';
   }}
-function finishOnb(){ document.getElementById('onb').classList.add('hide'); }
+function finishOnb(){ document.getElementById('onb').classList.add('hide');
+  setTimeout(()=>{ Mascot.show(true); Mascot.say(`Hi, I'm <b>${esc(PERSONA.name)}</b> 👋 You've ${num(Engine.safeToSpend())} safe to spend today. Tap me anytime.`,'happy',6000); }, 480);
+}
 
 /* =====================================================================
    DEMO SCENARIOS (prototype only) — swap the "available now" snapshot
@@ -1247,6 +1299,8 @@ function applyScenario(k){
   const cur=document.querySelector('nav button.on').dataset.scr;
   if(cur==='home')renderHome(); else if(cur==='insights')renderInsights();
   else if(cur==='goals')renderGoals(); else if(cur==='activity')renderActivity();
+  if(typeof Mascot!=='undefined'){ const s=Engine.safeToSpend();
+    Mascot.context(cur); Mascot.say(s<60?`Tight one. ${num(s)} safe to spend`:`${num(s)} safe to spend now`, s<60?'worried':'happy'); }
   requestAnimationFrame(()=>countUpActive(cur));
 }
 
@@ -1394,6 +1448,7 @@ function applyPersona(){
   el.style.background=avGrad(PERSONA.accent); el.textContent=avEmoji(PERSONA.avatar);
   el.classList.toggle('small',!!PERSONA.small);
   document.getElementById('hdrName').textContent=PERSONA.name||'Tilly';
+  if(typeof Mascot!=='undefined'&&Mascot.char) Mascot.recolor(PERSONA.accent);
   savePersona();
 }
 function setAvatar(id){ PERSONA.avatar=id; applyPersona(); renderCust(); }
@@ -1414,6 +1469,51 @@ function renderCust(){
     <button class="ai-close" onclick="closeCust()">Done</button>`;
 }
 
+/* =====================================================================
+   MASCOT — the corner character that reacts to your money
+   ===================================================================== */
+const Mascot={
+  char:null, bubble:null, el:null, hideT:null,
+  MOUTHS:{happy:'M38,60 Q50,72 62,60',neutral:'M40,63 Q50,67 60,63',worried:'M40,66 Q50,58 60,66',celebrate:'M39,59 Q50,77 61,59 Z',thinking:'M45,64 Q50,68 55,64'},
+  init(){
+    this.el=document.getElementById('mascot'); this.char=document.getElementById('mascotChar'); this.bubble=document.getElementById('mascotBubble');
+    if(!this.char)return; this.recolor(PERSONA.accent); this.mood('happy'); this.blink();
+  },
+  recolor(c){ if(!this.char)return;
+    const f=this.char.querySelector('.m-fill'); if(f)f.setAttribute('fill',c);
+    const sp=this.char.querySelector('.m-sprout'); if(sp)sp.setAttribute('fill',lighten(c,35));
+    this.char.querySelectorAll('.m-arm').forEach(a=>a.setAttribute('stroke',c));
+  },
+  mood(m){ if(!this.char)return;
+    const mouth=document.getElementById('mMouth'), bL=document.getElementById('browL'), bR=document.getElementById('browR');
+    mouth.setAttribute('d',this.MOUTHS[m]||this.MOUTHS.neutral);
+    mouth.setAttribute('fill',m==='celebrate'?'#fff':'none');
+    this.el.classList.toggle('celebrate',m==='celebrate');
+    if(m==='worried'){ bL.setAttribute('d','M34,40 L46,35'); bR.setAttribute('d','M54,35 L66,40'); }
+    else if(m==='happy'||m==='celebrate'){ bL.setAttribute('d','M34,36 L46,36'); bR.setAttribute('d','M54,36 L66,36'); }
+    else { bL.setAttribute('d','M34,38 L46,38'); bR.setAttribute('d','M54,38 L66,38'); }
+  },
+  react(){ if(!this.char)return; this.char.classList.remove('pop'); void this.char.offsetWidth; this.char.classList.add('pop'); },
+  say(html,m,ms=4600){ if(!this.bubble)return; if(m)this.mood(m); this.react();
+    this.bubble.innerHTML=html; this.bubble.classList.add('show');
+    clearTimeout(this.hideT); this.hideT=setTimeout(()=>this.bubble.classList.remove('show'),ms);
+  },
+  blink(){ const e=document.getElementById('mEyes'); if(e){ e.classList.add('blink'); setTimeout(()=>e.classList.remove('blink'),120); }
+    setTimeout(()=>this.blink(), 2600+Math.random()*2800);
+  },
+  show(v){ if(this.el)this.el.classList.toggle('show',v); },
+  tap(){ const cur=document.querySelector('nav button.on').dataset.scr; if(cur!=='chat') go('chat'); },
+  context(scr){
+    if(!this.el)return;
+    if(scr==='chat'){ this.show(false); return; }
+    this.show(true);
+    if(scr==='home') this.mood(Engine.safeToSpend()<60?'worried':'happy');
+    else if(scr==='goals') this.mood(Engine.monthlySurplus()>0?'happy':'worried');
+    else if(scr==='insights') this.mood(Engine.goingOutPct(4)>=45?'worried':'neutral');
+    else this.mood('happy');
+  }
+};
+
 function boot(){
   loadPersona(); applyPersona();
   document.getElementById('stsPillVal').textContent=fmt(Engine.safeToSpend());
@@ -1421,6 +1521,7 @@ function boot(){
   document.getElementById('onbCoffee').textContent=Engine.nightsOut(4)+' nights out last month, '+fmt(Engine.goingOut(4))+' going out';
   renderHome();
   requestAnimationFrame(()=>countUpActive('home'));
+  Mascot.init(); Mascot.context('home');
 }
 boot();
 </script>
